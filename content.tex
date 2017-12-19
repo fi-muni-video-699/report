@@ -1,0 +1,216 @@
+\title[Lecture slide retrieval]{Slide retrieval based on lecture recordings}
+\author[V.\,Novotný]{Vít Novotný \\ witiko@mail.muni.cz}
+\institute[FI MU]{Faculty of Informatics, Masaryk University}
+\date{\today}
+\subject{Project report}
+\keywords{information retrieval, image processing, pattern recognition}
+
+\maketitle
+
+\begin{frame}
+\frametitle<presentation>{Table of Contents}
+\tableofcontents
+\end{frame}
+
+\section{Introduction}
+Since the spring of 2004, the Faculty of Informatics at the Masaryk University
+in Brno, Czech Republic (FI MU) has been recording lectures that take place in
+the \abbr{D1}, \abbr{D2}, and \abbr{D3} lecture halls and making these
+recordings available to students at the
+\href{https://www.video.muni.cz}{video.muni.cz} web site as \term{digital video
+files}~\cite{hladkaliska03lectures}. These recordings are a valuable learning
+resource; however, due to the lack of information about the structure and the
+content of these recordings, it is difficult to
+\begin{enumerate}
+\item retrieve recordings relevant to the user's \term{information need},
+\item find relevant portions in the retrieved recordings, and
+\item transform the information contained in the recording to a form that is more
+  accessible to visually impaired users.
+\end{enumerate}
+As a result, the usefulness of these recordings is rarely fully exploited.
+
+Most lecturers accompany their lectures with \term{lecture slides} that are shown
+on the recordings and, at the same time, available for the students as a part of
+the course materials in the form of structured \abbr{PDF} documents. One way to
+add structured information to the recordings is then to find a mapping between the
+temporal dimension of a recording and the pages of the corresponding lecture
+slides. This gives us the digital form of the text that is being shown on any
+given \term{frame} of the recordings, which can be immediately used to
+\begin{enumerate}
+\item retrieve portions of recordings relevant to the user's information need
+  expressed in the form of a text query and
+\item convey the text to the visually impaired user using a screen reader, a
+  braille display, or another reading device.
+\end{enumerate}
+Other uses include the improvement of the perceived recording quality by
+superimposing a high-resolution rendering of the \abbr{PDF} document pages on
+the low-resolution digital video files.
+
+The text is structured as follows: In section~\ref{sec:subtasks}, I will
+describe the individual subtasks of a solution to the above goal, …
+
+\section{Subtasks}
+\label{sec:subtasks}
+\subsection{Sources of noise}
+To better understand the intricacies of our task, let us first discuss what
+kinds of \term{noise} we can expect to appear in our recordings.
+
+\paragraph{Projection} Often, a lecturer will use an unpublished version of the
+lecture slides that contains additional pages with \term{incrementally uncovered}
+content. In this case, the lecture slides from the course materials may be a
+poor fit to what is shown on the recordings.
+
+Occasionally, a lecturer will also show their lecture slides in a window rather
+than in a full-screen mode. Therefore, finding the position of a projection
+screen and finding the position of a lecture slide within a \term{projection
+screen} become two distinct tasks.
+
+\paragraph{Scene} Due to the defects in the optical system of any camera, a
+lecture room recording will suffer from a number of \term{aberrations} such as
+defocus and distortion. In addition, if the camera is not perpendicular to a
+projection screen, an \term{inverse perspective transform} of the recording
+will be necessary to make the region corresponding to a projection screen
+rectangular.
+
+Let $\mathcal X$ be the \term{color space} of the lecture slides, $\mathcal Y$
+the color space of the \term{projector}, and $\Phi_{\mathcal X},\Phi_{\mathcal
+Y}$ the maps to the common color space $\mathbb K$. If the overlap between
+$\Phi_{\mathcal X}(\mathcal X)$ and $\Phi_{\mathcal Y}(\mathcal Y)$ is small,
+$\Phi^{-1}_{\mathcal Y}(\Phi_{\mathcal X}(\mathcal X))$ will be a poor
+representation of $\mathcal X$. Even if $\Phi_{\mathcal X}(\mathcal
+X)\approx\Phi_{\mathcal Y}(\mathcal Y)$, the \term{reflectance} of the
+projection screen surface will distort the colors.
+
+Due to the lightning conditions, the projection screen will in general be
+\term{unevenly-lit}.
+
+Obstacles positioned between the \term{camera lens} and a projection screen may
+partially obscure the recorded lecture slides.
+
+\paragraph{Capture} The guesswork in assessing the \term{color temperature},
+the presence of light sources that produce different color spectra compared to
+\term{blackbodies}, and the potentially small overlap between $\Phi_{\mathcal
+Y}(\mathcal Y)$ and $\Phi_{\mathcal Z}(\mathcal Z)$, where $\mathcal Z$ is the
+color space of the projector will further distort the colors.
+
+Unlike lecture slides, which are generally provided in the form of vector
+\abbr{PDF} documents, the resulting digital video files are a result of
+\begin{enumerate}
+  \item temporal sampling into frames at a given \term{framerate},
+  \item spatial sampling at a given \term{resolution},
+  \item frequency sampling at a given \term{color depth},
+  \item \term{chroma subsampling}, and 5. \term{lossy compression}
+\end{enumerate}
+applied to the original recording. Each of the above reduces the amount of
+information present in the digital video file.
+
+\iffalse
+Each frame of a video can show several projection screens, each with a
+different presentation slide. Since the lens of a video camera capturing the
+scene is unlikely to be perpendicular to any screen, there is likely to be
+perspective distortion that we need to deal with. Beside perspective, uneven
+illumination will 
+
+The 
+Since , I split up the task into several subtasks.
+\fi
+
+\section{Dataset}
+\section{System description}
+\section{Experimental setup}
+\section{Results}
+\section{Conclusion}
+
+\iffalse
+
+\section[Short Section 1 Name]{Full Section 1 Name}
+\subsection[Short Subsection 1 Name]{Full Subsection 1 Name}
+
+\begin{frame}{Frame Title}{Frame Subtitle}
+plain text, \structure{page structure}, \alert{emphasis}
+\begin{itemize}
+  \item a single-line bullet list item
+  \item a bullet list item that is quite long (in order to force a line break),
+    which also contains \alert{emphasized text}
+  \begin{itemize}
+    \item a second-level list item
+    \begin{itemize}
+      \item a third-level list item
+    \end{itemize}
+    \alert{\item an emphasized second-level list item}
+  \end{itemize}
+\end{itemize}
+\begin{enumerate}
+  \item a numbered list item
+  \begin{enumerate}
+    \item a second-level list item containing a math expression
+      \[ E = mc^2 \]
+  \end{enumerate}
+\end{enumerate}
+\end{frame}
+
+\subsection[Short Subsection 2 Name]{Full Subsection 2 Name}
+
+\begin{frame}{Text Blocks}
+text above a block
+\begin{block}{Block}
+  text
+\end{block}
+\begin{exampleblock}{Example Block}
+  text
+\end{exampleblock}
+\begin{alertblock}{Emphasized Block}
+  text
+\end{alertblock}
+text below a block\footnote{a footnote with an \url{http://address.edu}}
+\end{frame}
+
+\begin{frame}{Figures}
+\begin{figure}
+  \includegraphics[width=.5\textwidth,height=.5\textheight,keepaspectratio]{cow-black.mps}
+  \caption{A Holstein Friesian cow}
+\end{figure}
+\end{frame}
+
+\subsection[Short Subsection 3 Name]{Full Subsection 3 Name}
+
+\begin{frame}{Tables}
+\begin{table}
+  \begin{tabular}{llc}
+    First Name & Surname & Year of Birth \\ \midrule
+    Albert & Einstein & 1879 \\
+    Marie & Curie & 1867 \\
+    Thomas & Edison & 1847 \\
+  \end{tabular}
+  \caption{The great minds of the 19th century}
+\end{table}
+\end{frame}
+
+\makeatletter
+\begin{frame}{Automatic Optical Scaling}
+\begin{center}
+\begin{tabular}{ll}
+\Huge \f@family & \Huge \structure{\f@size pt} \\
+\huge \f@family & \huge \structure{\f@size pt}  \\
+\LARGE \f@family & \LARGE \structure{\f@size pt}  \\
+\Large \f@family & \Large \structure{\f@size pt}  \\
+\large \f@family & \large \structure{\f@size pt}  \\
+\normalsize \f@family & \normalsize \structure{\f@size pt}  \\[-0.95pt]
+\small \f@family & \small \structure{\f@size pt}  \\[-1.95pt]
+\footnotesize \f@family & \footnotesize \structure{\f@size pt} \\[-2.95pt]
+\scriptsize \f@family & \scriptsize \structure{\f@size pt}  \\[-4.95pt]
+\tiny \f@family & \tiny \structure{\f@size pt}
+\end{tabular}
+\end{center}
+\end{frame}
+\makeatother
+
+\fi
+
+\begin{frame}<presentation>[plain]
+\vfill
+\centerline{Thank you for your attention!}
+\vfill\vfill
+\end{frame}
+
+\printbibliography[heading=bibintoc]

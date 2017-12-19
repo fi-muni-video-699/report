@@ -1,0 +1,25 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usetheme[workplace=fi]{MU}
+\usepackage[
+  backend=biber,
+  style=authoryear,
+  sorting=none,
+  autolang=other,
+  sortlocale=auto,
+]{biblatex}
+\addbibresource{content.bib}
+% Some additional macros.
+\def\abbr#1{\MakeUppercase{#1}}
+\let\term\emph
+\begin{document}
+\AtBeginSection[]{% Print an outline at the beginning of sections
+  \begin{frame}<beamer>
+    \frametitle{Outline for Section \thesection}
+    \tableofcontents[currentsection]
+  \end{frame}}
+\input content
+\end{document}

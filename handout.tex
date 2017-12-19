@@ -1,0 +1,24 @@
+% Začátek preambule
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[resetfonts]{cmap}
+\usepackage[T1]{fontenc}
+\usepackage[osf]{newpxtext}
+\usepackage{mathpazo}
+\usepackage[utf8]{inputenc}
+\usepackage{beamerarticle}
+\usepackage{hyperref,graphicx,booktabs}
+\usepackage[
+  backend=biber,
+  style=iso-numeric,
+  sorting=none,
+  autolang=other,
+  sortlocale=auto,
+]{biblatex}
+\addbibresource{content.bib}
+% Some additional macros.
+\def\abbr#1{\textsc{\MakeLowercase{#1}}}
+\let\term\emph
+\begin{document}
+\input content
+\end{document}
