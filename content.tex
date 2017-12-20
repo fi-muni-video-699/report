@@ -46,24 +46,29 @@ Other uses include the improvement of the perceived recording quality by
 superimposing a high-resolution rendering of the \abbr{PDF} document pages on
 the low-resolution digital video files.
 
-The text is structured as follows: In section~\ref{sec:subtasks}, I will
-describe the individual subtasks of a solution to the above goal, …
+The text is structured as follows: In section~\ref{sec:tasks}, I will describe
+the individual tasks of a system solving the above goal, …
 
-\section{Subtasks}
-\label{sec:subtasks}
+\section{Problem statement}
+\label{sec:tasks}
+In this section, I will describe the problems associated with mapping lecture
+recordings to lecture slide pages and I will specify the tasks a system will
+need to solve.
+
 \subsection{Sources of noise}
+\label{sec:noise}
 To better understand the intricacies of our task, let us first discuss what
 kinds of \term{noise} we can expect to appear in our recordings.
 
 \paragraph{Projection} Often, a lecturer will use an unpublished version of the
 lecture slides that contains additional pages with \term{incrementally uncovered}
 content. In this case, the lecture slides from the course materials may be a
-poor fit to what is shown on the recordings.
+poor match to what is shown on the recordings.
 
 Occasionally, a lecturer will also show their lecture slides in a window rather
 than in a full-screen mode. Therefore, finding the position of a projection
-screen and finding the position of a lecture slide within a \term{projection
-screen} become two distinct tasks.
+screen and finding the position of a lecture slide page within a
+\term{projection screen} become two distinct tasks.
 
 \paragraph{Scene} Due to the defects in the optical system of any camera, a
 lecture room recording will suffer from a number of \term{aberrations} such as
@@ -82,10 +87,10 @@ X)\approx\Phi_{\mathcal Y}(\mathcal Y)$, the \term{reflectance} of the
 projection screen surface will distort the colors.
 
 Due to the lightning conditions, the projection screen will in general be
-\term{unevenly-lit}.
+\term{unevenly lit}.
 
-Obstacles positioned between the \term{camera lens} and a projection screen may
-partially obscure the recorded lecture slides.
+\term{Obstacles} positioned between the \term{camera lens} and a projection
+screen may partially obscure the recorded lecture slides.
 
 \paragraph{Capture} The guesswork in assessing the \term{color temperature},
 the presence of light sources that produce different color spectra compared to
@@ -104,16 +109,54 @@ Unlike lecture slides, which are generally provided in the form of vector
 applied to the original recording. Each of the above reduces the amount of
 information present in the digital video file.
 
-\iffalse
-Each frame of a video can show several projection screens, each with a
-different presentation slide. Since the lens of a video camera capturing the
-scene is unlikely to be perpendicular to any screen, there is likely to be
-perspective distortion that we need to deal with. Beside perspective, uneven
-illumination will 
+\subsection{Tasks}
+Given the above analysis, a system mapping lecture recordings to lecture slides
+will need to solve the following tasks listed in bottom-up order:
+\begin{enumerate}
+  \item assessing the similarity between a cropped-out projection screen and
+    lecture slides, namely
+    \begin{enumerate}
+      \item mapping a cropped-out projection screen to a lecture slide page, and
+      \item deciding if a projection screen matches any lecture slide page,
+    \end{enumerate}
+  \item detecting and cropping out all projection screens in a single frame
+    of a recording, and
+  \item selecting important frames and the order in which frames are resolved.
+\end{enumerate}
+I will now describe the individual tasks in detail along with the proposed
+evaluation method.
 
-The 
-Since , I split up the task into several subtasks.
-\fi
+\paragraph{Task 1a} Given a single cropped-out projection screen and a set of
+lecture slide pages, the task is to retrieve the page in the set that is most
+similar to the screen. Since a screen and the matching page may not be
+perfectly aligned, rotation~\cite{smith1995simple}, and
+translation~\cite{sarvaiyaetal09} coupled with scaling may be necessary to
+\term{register} each screen-page tuple before the removal of the noise
+described in section~\ref{sec:noise}.
+
+I will frame this task as an \term{information retrieval} (\abbr{IR}) problem,
+i.e. we will be looking for an \abbr{IR} system that ranks pages by their
+similarity to a screen and, if there exists a matching page, it will be the
+top-ranking one. To compare two systems, we may estimate the expected value and
+the variance of the \term{rank} of a matching page produced by the two systems
+across one or several test dataset.
+
+\paragraph{Task 1b} Given a single cropped-out projection screen and a set of
+lecture slide pages, the task is to decide whether or not the screen matches
+any page in the set.  If a task 1a system produces for each screen not only a
+ranking of pages, but also an estimate of distance, similarity, match
+confidence, or match probability for each page, and if the random vector of
+these estimates can be expected to have a different probability distribution
+for the positive (when a screen matches) and the negative cases, then a
+classifier can be trained on one or several training datasets using the
+measures produced by a task 1a system as features.
+
+If we only require that our system produce binary decisions, then we can
+estimate the expected value of the \term{error rate} (the ratio between wrong
+to right decisions) to compare two systems. If we also require that our system
+produces a probability estimate, then we can estimate the expected value of a
+„softer“ measure, such as the \term{logarithmic loss} (the inverse of the
+log-likelihood~\cite[sec~2.6.3]{friedman2001elements}).
 
 \section{Dataset}
 \section{System description}
