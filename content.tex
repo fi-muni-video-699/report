@@ -96,7 +96,7 @@ screen may partially obscure the recorded lecture slides.
 the presence of light sources that produce different color spectra compared to
 \term{blackbodies}, and the potentially small overlap between $\Phi_{\mathcal
 Y}(\mathcal Y)$ and $\Phi_{\mathcal Z}(\mathcal Z)$, where $\mathcal Z$ is the
-color space of the projector will further distort the colors.
+color space of the projector, will further distort the colors.
 
 Unlike lecture slides, which are generally provided in the form of vector
 \abbr{PDF} documents, the resulting digital video files are a result of
@@ -137,9 +137,9 @@ described in section~\ref{sec:noise}.
 I will frame this task as an \term{information retrieval} (\abbr{IR}) problem,
 i.e. we will be looking for an \abbr{IR} system that ranks pages by their
 similarity to a screen and, if there exists a matching page, it will be the
-top-ranking one. To compare two systems, we may estimate the expected value and
-the variance of the \term{rank} of a matching page produced by the two systems
-across one or several test dataset.
+top-ranking one. To compare two systems, we may estimate the expected value of
+the \term{rank} of a matching page produced by the two systems across one or
+several test dataset.
 
 \paragraph{Task 1b} Given a single cropped-out projection screen and a set of
 lecture slide pages, the task is to decide whether or not the screen matches
@@ -156,7 +156,14 @@ estimate the expected value of the \term{error rate} (the ratio between wrong
 to right decisions) to compare two systems. If we also require that our system
 produces a probability estimate, then we can estimate the expected value of a
 „softer“ measure, such as the \term{logarithmic loss} (the inverse of the
-log-likelihood~\cite[sec~2.6.3]{friedman2001elements}).
+log-likelihood~\cite[sec~2.6.3]{friedman2001elements}) which favors classifiers
+that are hesitant about their wrong decisions and confident about their right
+decisions.
+
+\paragraph{Task 2} Given a single recording frame, the task is to detect the
+boundaties of all lit projection screens. To compare two systems, we can
+estimate the expected value of the \term{Jaccard index} between each system and
+one or several test datasets using polygonal union and intersection.
 
 \section{Dataset}
 \section{System description}
