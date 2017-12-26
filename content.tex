@@ -103,7 +103,7 @@ Unlike lecture slides, which are generally provided in the form of vector
 \begin{enumerate}
   \item temporal sampling into frames at a given \term{framerate},
   \item spatial sampling at a given \term{resolution},
-  \item frequency sampling at a given \term{color depth},
+  \item light frequency sampling at a given \term{color depth},
   \item \term{chroma subsampling}, and 5. \term{lossy compression}
 \end{enumerate}
 applied to the original recording. Each of the above reduces the amount of
@@ -136,10 +136,10 @@ described in section~\ref{sec:noise}.
 
 I will frame this task as an \term{information retrieval} (\abbr{IR}) problem,
 i.e. we will be looking for an \abbr{IR} system that ranks pages by their
-similarity to a screen and, if there exists a matching page, it will be the
-top-ranking one. To compare two systems, we may estimate the expected value of
-the \term{rank} of a matching page produced by the two systems across one or
-several test dataset.
+similarity to a screen and, if there exists a matching page, it will be placed
+first. To compare two systems, we can estimate the expected value of the
+\term{rank} of a matching page produced by each system across one or several
+test dataset.
 
 \paragraph{Task 1b} Given a single cropped-out projection screen and a set of
 lecture slide pages, the task is to decide whether or not the screen matches
@@ -147,15 +147,15 @@ any page in the set.  If a task 1a system produces for each screen not only a
 ranking of pages, but also an estimate of distance, similarity, match
 confidence, or match probability for each page, and if the random vector of
 these estimates can be expected to have a different probability distribution
-for the positive (when a screen matches) and the negative cases, then a
+in the positive case (when a screen matches) and in the negative case, then a
 classifier can be trained on one or several training datasets using the
 measures produced by a task 1a system as features.
 
-If we only require that our system produce binary decisions, then we can
-estimate the expected value of the \term{error rate} (the ratio between wrong
-to right decisions) to compare two systems. If we also require that our system
-produces a probability estimate, then we can estimate the expected value of a
-„softer“ measure, such as the \term{logarithmic loss} (the inverse of the
+If we only require a system produce binary decisions, then we can estimate the
+expected value of the \term{error rate} (the ratio between wrong to right
+decisions) to compare two systems. If we also require that a system produce a
+probability estimate, then we can estimate the expected value of a „softer“
+measure, such as the \term{logarithmic loss} (the inverse of the
 log-likelihood~\cite[sec~2.6.3]{friedman2001elements}) which favors classifiers
 that are hesitant about their wrong decisions and confident about their right
 decisions.
@@ -164,6 +164,18 @@ decisions.
 boundaties of all lit projection screens. To compare two systems, we can
 estimate the expected value of the \term{Jaccard index} between each system and
 one or several test datasets using polygonal union and intersection.
+
+\paragraph{Task 3} Given a single recording, the task is to detect the frames
+at which the following events take place:
+\begin{enumerate}
+  \item a new projection screen is lit,
+  \item a projection screen is no longer lit, or
+  \item a projection screen shows new content.
+\end{enumerate}
+To compare two systems, we can take events of each type and estimate the
+expected value of standard segmentation similarity metrics such as boundary
+similarity ($\textrm B$)~\cite{P13-1167} for the event type between each system
+and one or several test datasets.
 
 \section{Dataset}
 \section{System description}
