@@ -151,14 +151,17 @@ in the positive case (when a screen matches) and in the negative case, then a
 classifier can be trained on one or several training datasets using the
 measures produced by a task 1a system as features.
 
-If we only require a system produce binary decisions, then we can estimate the
-expected value of the \term{error rate} (the ratio between wrong to right
-decisions) to compare two systems. If we also require that a system produce a
-probability estimate, then we can estimate the expected value of a „softer“
-measure, such as the \term{logarithmic loss} (the inverse of the
-log-likelihood~\cite[sec~2.6.3]{friedman2001elements}) which favors classifiers
-that are hesitant about their wrong decisions and confident about their right
-decisions.
+If two systems only produce binary decisions, then we can estimate the expected
+values of the \term{misclassification loss} to compare them. If two systems
+also report the decision confidence expressed by the distance from a
+\term{decision hyperplane}, then we can estimate the expected value of the
+\term{binomial deviance}~\cite[sec.~10.6]{friedman2001elements} to compare the
+systems. Alternatively, if two systems produce a posterior probability
+estimate, then we can estimate the expected values of the
+\term{log-likelihood}~\cite[sec.~2.6.3]{friedman2001elements} to compare the
+systems.
+Both binomial deviance and log-likelihood favor classifiers that are hesitant
+about their wrong decisions and confident about their correct decisions.
 
 \paragraph{Task 2} Given a single recording frame, the task is to detect the
 boundaties of all lit projection screens. To compare two systems, we can
@@ -178,6 +181,26 @@ similarity ($\textrm B$)~\cite{P13-1167} for the event type between each system
 and one or several test datasets.
 
 \section{Dataset}
+As a first step in building and evaluating a system solving the above tasks, I
+built a dataset from recordings published at \url{https://video.muni.cz}.
+Although recordings date as far back as 2004, I restricted myself to the
+recordings from the \abbr{D1}, \abbr{D2}, and \abbr{D3} lecture halls taken
+during 2010--2016. This was mainly due to the difficulty in reaching out to
+the lecturers who are often no longer a part of the faculty, and the variance
+in the video file format encoding and resolution. From these recordings, I drew
+a uniform random sample of 17 recordings that would form my dataset.
+
+\subsection{Dataset structure}
+
+\begin{figure}
+\includegraphics[width=\textwidth]{fig/schema}
+\caption{The \abbr{XML} schema of the dataset produced using the \abbr{XSD}
+  diagram tool}
+\end{figure}
+
+\subsection{Python bindings}
+\subsection{Lecturer consent}
+
 \section{System description}
 \section{Experimental setup}
 \section{Results}
