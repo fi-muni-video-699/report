@@ -46,7 +46,7 @@ Other uses include the improvement of the perceived recording quality by
 superimposing a high-resolution rendering of the \abbr{PDF} document pages on
 the low-resolution digital video files.
 
-The text is structured as follows: In section~\ref{sec:tasks}, I will describe
+The text is structured as follows: In Section~\ref{sec:tasks}, I will describe
 the individual tasks of a system solving the above goal, …
 
 \section{Problem statement}
@@ -110,6 +110,7 @@ applied to the original recording. Each of the above reduces the amount of
 information present in the digital video file.
 
 \subsection{Tasks}
+\label{sec:tasks}
 Given the above analysis, a system mapping lecture recordings to lecture slides
 will need to solve the following tasks listed in bottom-up order:
 \begin{enumerate}
@@ -132,7 +133,7 @@ similar to the screen. Since a screen and the matching page may not be
 perfectly aligned, rotation~\cite{smith1995simple}, and
 translation~\cite{sarvaiyaetal09} coupled with scaling may be necessary to
 \term{register} each screen-page tuple before the removal of the noise
-described in section~\ref{sec:noise}.
+described in Section~\ref{sec:noise}.
 
 I will frame this task as an \term{information retrieval} (\abbr{IR}) problem,
 i.e. we will be looking for an \abbr{IR} system that ranks pages by their
@@ -182,20 +183,46 @@ and one or several test datasets.
 
 \section{Dataset}
 As a first step in building and evaluating a system solving the above tasks, I
-built a dataset from recordings published at \url{https://video.muni.cz}.
-Although recordings date as far back as 2004, I restricted myself to the
+built a dataset from the recordings published at \url{https://video.muni.cz}.
+Although the recordings date as far back as 2004, I restricted myself to the
 recordings from the \abbr{D1}, \abbr{D2}, and \abbr{D3} lecture halls taken
 during 2010--2016. This was mainly due to the difficulty in reaching out to
 the lecturers who are often no longer a part of the faculty, and the variance
-in the video file format encoding and resolution. From these recordings, I drew
-a uniform random sample of 17 recordings that would form my dataset.
+in the video file format encoding and resolution. From the uniform distribution
+of these recordings, I drew a random sample that would form my dataset.
 
 \subsection{Dataset structure}
+The dataset consists of 17 recordings. For the purpose of solving tasks 1 and
+2, a recording consists of a set of lecture slides and a sample of the video
+file frames. Since the components of the system solving tasks 1 and 2 will only
+be invoked by the component solving task 3 when one of the events described in
+Section~\ref{sec:tasks} takes place, I did not assume uniform distribution of
+the frames when drawing a sample. Instead, I reduced each uneventful segment of
+the recording into a single frame by drawing from the uniform distribution of
+frames forming the segment. A random sample of up to 25 frames was then drawn
+from the uniform distribution of the reduced segments. For each frame in the
+sample, I marked the locations of lit screens and annotated the pages of the
+lecture slides shown on the screens.
+
+The dataset is represented by an \abbr{XML} document in the language shown in
+Figure~\ref{fig:schema}. The root element consists of a sequence of recordings
+represented by video elements. Each video element contains the following
+attributes:
+\begin{description}
+  \item[dirname] the name of the directory containing frames and lecture slides,
+    0
+  \item[uri] an \abbr{URI} at which the original video file is available,
+  \item[fps] the framerate of the original video file,
+  \item[frames] the length of the original video file in frames, and
+  \item[width\textmd, height] the resolution of the original video file.
+\end{description}
 
 \begin{figure}
-\includegraphics[width=\textwidth]{fig/schema}
-\caption{The \abbr{XML} schema of the dataset produced using the \abbr{XSD}
-  diagram tool}
+\leavevmode\kern-0.2\textwidth
+\includegraphics[width=1.4\textwidth]{fig/schema}
+\caption{The \abbr{XML} schema of the dataset \iffalse produced using the
+  \term{\abbr{XSD} diagram} tool\fi}
+\label{fig:schema}
 \end{figure}
 
 \subsection{Python bindings}
