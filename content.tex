@@ -165,7 +165,7 @@ Both binomial deviance and log-likelihood favor classifiers that are hesitant
 about their wrong decisions and confident about their correct decisions.
 
 \paragraph{Task 2} Given a single recording frame, the task is to detect the
-boundaties of all lit projection screens. To compare two systems, we can
+boundaries of all lit projection screens. To compare two systems, we can
 estimate the expected value of the \term{Jaccard index} between each system and
 one or several test datasets using polygonal union and intersection.
 
@@ -191,31 +191,29 @@ the lecturers who are often no longer a part of the faculty, and the variance
 in the video file format encoding and resolution. From the uniform distribution
 of these recordings, I drew a random sample that would form my dataset.
 
+The original sample consisted of 20 recordings. For three recordings, I was
+unable to establish communication with the lecturers to request their consent.
+For three other recordings, the lecturers would not give consent to including
+the recordings in the dataset; I drew three recordings from the uniform
+distribution of recordings as a replacement.
+
 \subsection{Dataset structure}
 The dataset consists of 17 recordings. For the purpose of solving tasks 1 and
 2, a recording consists of a set of lecture slides and a sample of the video
-file frames. Since the components of the system solving tasks 1 and 2 will only
-be invoked by the component solving task 3 when one of the events described in
+file frames. Since the systems solving tasks 1 and 2 will only be invoked by
+the system solving task 3 when one of the events described in
 Section~\ref{sec:tasks} takes place, I did not assume uniform distribution of
 the frames when drawing a sample. Instead, I reduced each uneventful segment of
 the recording into a single frame by drawing from the uniform distribution of
 frames forming the segment. A random sample of up to 25 frames was then drawn
 from the uniform distribution of the reduced segments. For each frame in the
-sample, I marked the locations of lit screens and annotated the pages of the
-lecture slides shown on the screens.
+sample, I marked the boundaries of all lit screens and described the pages of
+the lecture slides shown on the screens.
 
 The dataset is represented by an \abbr{XML} document in the language shown in
 Figure~\ref{fig:schema}. The root element consists of a sequence of recordings
-represented by video elements. Each video element contains the following
-attributes:
-\begin{description}
-  \item[dirname] the name of the directory containing frames and lecture slides,
-    0
-  \item[uri] an \abbr{URI} at which the original video file is available,
-  \item[fps] the framerate of the original video file,
-  \item[frames] the length of the original video file in frames, and
-  \item[width\textmd, height] the resolution of the original video file.
-\end{description}
+represented by video elements. I will now describe the individual elements
+of the language in detail.
 
 \begin{figure}
 \leavevmode\kern-0.2\textwidth
@@ -224,6 +222,30 @@ attributes:
   \term{\abbr{XSD} diagram} tool\fi}
 \label{fig:schema}
 \end{figure}
+
+\subsubsection*{The video elements}
+Each video element contains the following attributes:
+\begin{description}
+  \item[dirname] the name of the directory containing frames and lecture slides,
+  \item[uri] an \abbr{URI} at which the original video file is available,
+  \item[fps] the framerate of the original video file,
+  \item[frames] the length of the original video file in frames, and
+  \item[width\textmd, height] the resolution of the original video file.
+\end{description}
+Beside the attributes, a video element contains a sequence of frames and
+lecture slides represented by frame elements and document elements,
+respectively.
+
+\subsubsection*{The frame elements}
+Each frame element contains the following attributes:
+\begin{description}
+  \item[number] the frame number in the original video file,
+  \item[vgg256] two baseline feature vectors obtained by feeding the entire
+    frame into 256-dimensional \abbr{VGG} convolutional neural
+    networks~\cite{simonyan2014very} and taking the state of the last hidden
+    layer, and
+  \item[filename] the filename of the image file containing the frame.
+\end{description}
 
 \subsection{Python bindings}
 \subsection{Lecturer consent}
