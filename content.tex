@@ -46,11 +46,14 @@ Other uses include the improvement of the perceived recording quality by
 superimposing a high-resolution rendering of the \abbr{PDF} document pages on
 the low-resolution digital video files.
 
-The text is structured as follows: In Section~\ref{sec:tasks}, I will describe
-the individual tasks of a system solving the above goal, …
+The text is structured as follows: In Section~\ref{sec:problem}, I will
+break down the problem into individual tasks and describe the evaluation
+measures. In Section~\ref{sec:dataset}, I will describe the dataset
+that I built for training, model selection, and performance evaluation.
+In Section …
 
 \section{Problem statement}
-\label{sec:tasks}
+\label{sec:problem}
 In this section, I will describe the problems associated with mapping lecture
 recordings to lecture slide pages and I will specify the tasks a system will
 need to solve.
@@ -182,6 +185,7 @@ similarity ($\textrm B$)~\cite{P13-1167} for the event type between each system
 and one or several test datasets.
 
 \section{Dataset}
+\label{sec:dataset}
 As a first step in building and evaluating a system solving the above tasks, I
 built a dataset from the recordings published at \url{https://video.muni.cz}.
 Although the recordings date as far back as 2004, I restricted myself to the
@@ -195,7 +199,7 @@ The original sample consisted of 20 recordings. For three recordings, I was
 unable to establish communication with the lecturers to request their consent.
 For three other recordings, the lecturers would not give consent to including
 the recordings in the dataset; I drew three recordings from the uniform
-distribution of recordings as a replacement.
+distribution of recordings as substitutes.
 
 \subsection{Dataset structure}
 The dataset consists of 17 recordings. For the purpose of solving tasks 1 and
@@ -247,8 +251,28 @@ Each frame element contains the following attributes:
   \item[filename] the filename of the image file containing the frame.
 \end{description}
 
+\subsubsection*{The screen elements}
+Each screen element contains the following attributes:
+\begin{description}
+  \item[x0\textmd, y0\textmd, x1\textmd, y1\textmd, x2\textmd, y2\textmd,
+        x3\textmd, y3] coordinates with respect to the current frame
+    of the recording that specify the four corners of a quadrilinear
+    bounding a single lit projection screen,
+  \item[condition] the type of noise affecting this frame of the recording:
+    \begin{description}
+      \item[windowed] the projection screen shows a lecture slide in a window
+        rather than in a full-screen mode,
+      \item[obstacle] an obstacle positioned between the camera lens and the
+        projection screen partially obscures the lecture slide, and
+      \item[pristine] none of the above, and
+    \end{description}
+  \item[vgg256] two baseline feature vectors obtained by feeding the
+    the cropped-out projection screen frame into 256-dimensional \abbr{VGG}
+    convolutional neural networks~\cite{simonyan2014very} and taking the state
+    of the last hidden layer.
+\end{description}
+
 \subsection{Python bindings}
-\subsection{Lecturer consent}
 
 \section{System description}
 \section{Experimental setup}
