@@ -164,8 +164,9 @@ systems. Alternatively, if two systems produce a posterior probability
 estimate, then we can estimate the expected values of the
 \term{log-likelihood}~\cite[sec.~2.6.3]{friedman2001elements} to compare the
 systems.
-Both binomial deviance and log-likelihood favor classifiers that are hesitant
-about their wrong decisions and confident about their correct decisions.
+Informally speaking, both binomial deviance and log-likelihood favor
+classifiers that are hesitant about their wrong decisions and confident about
+their correct decisions.
 
 \paragraph{Task 2} Given a single recording frame, the task is to detect the
 boundaries of all lit projection screens. To compare two systems, we can
@@ -217,7 +218,7 @@ the lecture slides shown on the screens.
 The dataset is represented by an \abbr{XML} document in the language shown in
 Figure~\ref{fig:schema}. The root element consists of a sequence of recordings
 represented by video elements. I will now describe the individual elements
-of the language in detail.
+of the language.
 
 \begin{figure}
 \leavevmode\kern-0.2\textwidth
@@ -227,32 +228,37 @@ of the language in detail.
 \label{fig:schema}
 \end{figure}
 
-\subsubsection*{The video elements}
-Each video element contains the following attributes:
+\subsubsection*{The video element}
+Each video element corresponds to a single lecture recording and contains the
+following attributes:
 \begin{description}
-  \item[dirname] the name of the directory containing frames and lecture slides,
-  \item[uri] an \abbr{URI} at which the original video file is available,
-  \item[fps] the framerate of the original video file,
-  \item[frames] the length of the original video file in frames, and
-  \item[width\textmd, height] the resolution of the original video file.
+  \item[dirname] the name of the directory containing the frames and lecture slides,
+  \item[uri] an \abbr{URI} of the video file containing the recording,
+  \item[fps] the framerate of the video file,
+  \item[frames] the length of the video file in frames, and
+  \item[width\textmd, height] the resolution of the video file.
 \end{description}
-Beside the attributes, a video element contains a sequence of frames and
-lecture slides represented by frame elements and document elements,
+Beside the attributes, a video element contains a sequence of recording frames
+and lecture slides represented by frame elements and document elements,
 respectively.
 
-\subsubsection*{The frame elements}
-Each frame element contains the following attributes:
+\subsubsection*{The frame element}
+Each frame element corresponds to a single frame of a recording and contains
+the following attributes:
 \begin{description}
-  \item[number] the frame number in the original video file,
+  \item[number] the frame number in the video file,
   \item[vgg256] two baseline feature vectors obtained by feeding the entire
-    frame into 256-dimensional \abbr{VGG} convolutional neural
-    networks~\cite{simonyan2014very} and taking the state of the last hidden
+    frame into 256-dimensional \term{\abbr{VGG} convolutional neural
+    networks}~\cite{simonyan2014very} and taking the state of the last hidden
     layer, and
   \item[filename] the filename of the image file containing the frame.
 \end{description}
+Beside the attributes, a frame element contains a sequence of lit projection
+screens represented by screen elements.
 
-\subsubsection*{The screen elements}
-Each screen element contains the following attributes:
+\subsubsection*{The screen element}
+Each screen element corresponds to a single lit projection screen on a single
+frame of a recording and contains the following attributes:
 \begin{description}
   \item[x0\textmd, y0\textmd, x1\textmd, y1\textmd, x2\textmd, y2\textmd,
         x3\textmd, y3] coordinates with respect to the current frame
@@ -267,10 +273,35 @@ Each screen element contains the following attributes:
       \item[pristine] none of the above, and
     \end{description}
   \item[vgg256] two baseline feature vectors obtained by feeding the
-    the cropped-out projection screen frame into 256-dimensional \abbr{VGG}
-    convolutional neural networks~\cite{simonyan2014very} and taking the state
-    of the last hidden layer.
+    cropped-out projection screen frame into 256-dimensional \abbr{VGG}
+    convolutional neural networks and taking the state of the last hidden
+    layer.
 \end{description}
+Beside the attributes, a screen element is in a relation to pages of lecture
+slides that is represented by a sequence of keyref elements.
+
+\subsubsection*{The document element}
+Each document element corresponds to a single set of lecture slides and
+contains the following attribute:
+\begin{description}
+  \item[filename] the filename of the \abbr{PDF} file containing the lecture slides.
+\end{description}
+Beside the attribute, a document element contains a sequence of lecture slide
+pages screens represented by page elements.
+
+\subsubsection*{The page element}
+Each page element corresponds to a single page of lecture slides and contains
+the following attribute:
+\begin{description}
+  \item[key] a identifier of the page that is unique in the current video element,
+  \item[filename] the filename of the image file containing the page,
+  \item[number] the number of the page in the \abbr{PDF} document,
+  \item[vgg] two baseline feature vectors obtained by feeding the
+    page into 256-dimensional \abbr{VGG} convolutional neural networks and
+    taking the state of the last hidden layer.
+\end{description}
+Beside the attributes, a page element is in a relation to lit projection
+screens that is represented by a sequence of keyref elements.
 
 \subsection{Python bindings}
 
