@@ -229,7 +229,7 @@ of the language.
 \end{figure}
 
 \subsubsection*{The video element}
-Each video element corresponds to a single lecture recording and contains the
+A video element corresponds to a single lecture recording and contains the
 following attributes:
 \begin{description}
   \item[dirname] the name of the directory containing the frames and lecture slides,
@@ -243,8 +243,8 @@ and lecture slides represented by frame elements and document elements,
 respectively.
 
 \subsubsection*{The frame element}
-Each frame element corresponds to a single frame of a recording and contains
-the following attributes:
+A frame element corresponds to a single frame of a recording and contains the
+following attributes:
 \begin{description}
   \item[number] the frame number in the video file,
   \item[vgg256] two baseline feature vectors obtained by feeding the entire
@@ -257,14 +257,14 @@ Beside the attributes, a frame element contains a sequence of lit projection
 screens represented by screen elements.
 
 \subsubsection*{The screen element}
-Each screen element corresponds to a single lit projection screen on a single
+A screen element corresponds to a single lit projection screen on a single
 frame of a recording and contains the following attributes:
 \begin{description}
   \item[x0\textmd, y0\textmd, x1\textmd, y1\textmd, x2\textmd, y2\textmd,
         x3\textmd, y3] coordinates with respect to the current frame
     of the recording that specify the four corners of a quadrilinear
     bounding a single lit projection screen,
-  \item[condition] the type of noise affecting this frame of the recording:
+  \item[condition] the types of noise affecting this frame of the recording:
     \begin{description}
       \item[windowed] the projection screen shows a lecture slide in a window
         rather than in a full-screen mode,
@@ -280,9 +280,26 @@ frame of a recording and contains the following attributes:
 Beside the attributes, a screen element is in a relation to pages of lecture
 slides that is represented by a sequence of keyref elements.
 
+\subsubsection*{The keyref element}
+A keyref element corresponds to a single 2-tuple from a binary relation between
+lit projection screens and lecture slide pages and contains the following
+attribute:
+\begin{description}
+  \item[similarity] the type of relation between this lit projection screen and
+    a lecture slide page:
+    \begin{description}
+      \item[full] the projection screen shows the entire lecture slide, and
+      \item[incremental] the \term{logical page} shown in the projection screen
+        is split to several \term{physical pages} in the lecture slides and
+        incrementally uncovered.
+    \end{description}
+\end{description}
+Beside the attribute, a keyref element contains a reference to a lecture slide
+page represented the unique identifier of a page element.
+
 \subsubsection*{The document element}
-Each document element corresponds to a single set of lecture slides and
-contains the following attribute:
+A document element corresponds to a single set of lecture slides and contains
+the following attribute:
 \begin{description}
   \item[filename] the filename of the \abbr{PDF} file containing the lecture slides.
 \end{description}
@@ -300,8 +317,6 @@ the following attribute:
     page into 256-dimensional \abbr{VGG} convolutional neural networks and
     taking the state of the last hidden layer.
 \end{description}
-Beside the attributes, a page element is in a relation to lit projection
-screens that is represented by a sequence of keyref elements.
 
 \subsection{Python bindings}
 
