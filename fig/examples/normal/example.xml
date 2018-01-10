@@ -1,0 +1,29 @@
+<videos>
+  <video dirname="PA152-D3-20110331.avi" fps="15" frames="91674"
+         height="576" width="720" uri="…">
+    <frames>
+      …
+      <frame filename="frame006000.png" number="6000" vgg256="…">
+        <screens>
+          <screen condition="pristine"
+                  x0="345" x1="704" x2="351" x3="686"
+                  y0="16"  y1="14"  y2="300" y3="290" vgg256="…">
+            <keyrefs>
+              <keyref similarity="full">slides01-30</keyref>
+            </keyrefs>
+          </screen>
+        </screens>
+      </frame>
+      …
+    </frames>
+    <documents>
+      <document filename="slides01.pdf">
+        …
+        <page key="slides01-30" filename="slides01-30.png"
+              number="30" vgg256="…">
+        …
+      </document>
+    </documents>
+  </video>
+  …
+</videos>

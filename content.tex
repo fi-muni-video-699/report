@@ -1,5 +1,5 @@
 \title[Lecture slide retrieval]{Slide retrieval based on lecture recordings}
-\author[V.\,Novotný]{Vít Novotný \\ witiko@mail.muni.cz}
+\author[V.\,Novotný]{Vít Novotný, witiko@mail.muni.cz}
 \institute[FI MU]{Faculty of Informatics, Masaryk University}
 \date{\today}
 \subject{Project report}
@@ -231,15 +231,17 @@ the language.
 \label{fig:schema}
 \end{figure}
 
-\begin{sidewaysfigure}
+\afterpage{%
+\begin{landscape}
+\begin{figure}
 \thisfloatpagestyle{empty}
-\leavevmode\kern-0.13\textwidth
-\includegraphics[width=1.3\textwidth]{fig/uml}
-\hspace*{2cm}
-  \caption{The \abbr{UML} diagram schema of the Python interface for the dataset
+\leavevmode\kern-.09\paperheight
+\includegraphics[width=.9\paperheight]{fig/uml}
+\caption{A \abbr{UML} class diagram of the Python interface for the dataset
   \iffalse produced using the \term{Umbrello} tool\fi}
 \label{fig:uml}
-\end{sidewaysfigure}
+\end{figure}
+\end{landscape}}
 
 \subsubsection*{The video element}
 A video element corresponds to a single lecture recording and contains the
@@ -261,7 +263,7 @@ following attributes:
 \begin{description}
   \item[number] the frame number in the video file,
   \item[vgg256] two baseline feature vectors obtained by feeding the entire
-    frame into 256-dimensional \term{\abbr{VGG} convolutional neural
+    frame into 256dimensional \term{\abbr{VGG} convolutional neural
     networks}~\cite{simonyan2014very} and taking the state of the last hidden
     layer, and
   \item[filename] the filename of the image file containing the frame.
@@ -286,7 +288,7 @@ frame of a recording and contains the following attributes:
       \item[pristine] none of the above, and
     \end{description}
   \item[vgg256] two baseline feature vectors obtained by feeding the
-    cropped-out projection screen frame into 256-dimensional \abbr{VGG}
+    cropped-out projection screen frame into 256dimensional \abbr{VGG}
     convolutional neural networks and taking the state of the last hidden
     layer.
 \end{description}
@@ -327,7 +329,7 @@ the following attribute:
   \item[filename] the filename of the image file containing the page,
   \item[number] the number of the page in the \abbr{PDF} document,
   \item[vgg] two baseline feature vectors obtained by feeding the
-    page into 256-dimensional \abbr{VGG} convolutional neural networks and
+    page into 256dimensional \abbr{VGG} convolutional neural networks and
     taking the state of the last hidden layer.
 \end{description}
 
@@ -336,6 +338,26 @@ The dataset is distributed along with a Python interface implemented in files
 Figure~\ref{fig:uml}.
 
 \subsection{Examples}
+To give a better sense of the structure and the content of the dataset, I will
+now give several examples along with the corresponding \abbr{XML} code, and the
+images of the recording frames, projection screens, and lecture side pages.
+
+\begin{description}
+  \begin{figure}
+    \inputminted{xml}{fig/examples/normal/example.xml}
+    \exampleimages{fig/examples/normal}%
+      {frame006000.png}{frame006000-00.png}{slides01-30.png}
+    \caption{A screen element in the usual case. Both the abbreviated code
+      (above) and the recording frame, cropped-out projection screen, and the
+      lecture slide page (below) are shown.}
+    \label{fig:example-normal}
+  \end{figure}
+  \item[The usual case] For 371 out of the total 683 screen elements, the
+    projection screen is captured fully without any obstacles positioned
+    between the camera lens and the screen and it shows a single page from the
+    associated lecture slides in full-screen mode. An example is shown in
+    Figure~\ref{fig:example-normal}.
+\end{description}
 
 \section{System description}
 \section{Experimental setup}
@@ -434,4 +456,4 @@ text below a block\footnote{a footnote with an \url{http://address.edu}}
 \vfill\vfill
 \end{frame}
 
-\printbibliography[heading=bibintoc]
+\printbibliography
