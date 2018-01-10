@@ -195,12 +195,14 @@ during 2010--2016. This was mainly due to the difficulty in reaching out to
 the lecturers who are often no longer a part of the faculty, and the variance
 in the video file format encoding and resolution. From the uniform distribution
 of these recordings, I drew a random sample that would form my dataset.
-
 The original sample consisted of 20 recordings. For three recordings, I was
 unable to establish communication with the lecturers to request their consent.
 For three other recordings, the lecturers would not give consent to including
 the recordings in the dataset; I drew three recordings from the uniform
 distribution of recordings as substitutes.
+
+The dataset has been published in a Git repository at
+\url{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-699}.
 
 \subsection{Dataset structure}
 The dataset consists of 17 recordings. For the purpose of solving tasks 1 and
@@ -215,18 +217,29 @@ from the uniform distribution of the reduced segments. For each frame in the
 sample, I marked the boundaries of all lit screens and described the pages of
 the lecture slides shown on the screens.
 
-The dataset is represented by an \abbr{XML} document in the language shown in
-Figure~\ref{fig:schema}. The root element consists of a sequence of recordings
-represented by video elements. I will now describe the individual elements
-of the language.
+The dataset is represented by an \abbr{XML} document \texttt{dataset.xml} in
+the language \texttt{dataset.xsd} shown in Figure~\ref{fig:schema}. The root
+element of \texttt{dataset.xml} consists of a sequence of recordings
+represented by video elements. I will now describe the individual elements of
+the language.
 
 \begin{figure}
 \leavevmode\kern-0.2\textwidth
 \includegraphics[width=1.4\textwidth]{fig/schema}
-\caption{The \abbr{XML} schema of the dataset \iffalse produced using the
+\caption{The \abbr{XML} language \texttt{dataset.xsd} \iffalse produced using the
   \term{\abbr{XSD} diagram} tool\fi}
 \label{fig:schema}
 \end{figure}
+
+\begin{sidewaysfigure}
+\thisfloatpagestyle{empty}
+\leavevmode\kern-0.13\textwidth
+\includegraphics[width=1.3\textwidth]{fig/uml}
+\hspace*{2cm}
+  \caption{The \abbr{UML} diagram schema of the Python interface for the dataset
+  \iffalse produced using the \term{Umbrello} tool\fi}
+\label{fig:uml}
+\end{sidewaysfigure}
 
 \subsubsection*{The video element}
 A video element corresponds to a single lecture recording and contains the
@@ -318,7 +331,11 @@ the following attribute:
     taking the state of the last hidden layer.
 \end{description}
 
-\subsection{Python bindings}
+The dataset is distributed along with a Python interface implemented in files
+\texttt{dataset.py} and \texttt{review.py} whose class diagram is shown in
+Figure~\ref{fig:uml}.
+
+\subsection{Examples}
 
 \section{System description}
 \section{Experimental setup}
