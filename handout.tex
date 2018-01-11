@@ -27,7 +27,7 @@
 \let\note\footnote
 % Remove rectangles around bad syntax in \inputminted.
 \let\oldinputminted\inputminted\renewcommand\inputminted[2]{%
-  {\renewcommand\fcolorbox[4][rgb]{#4\kern1pt}%
+  {\renewcommand\fcolorbox[4][rgb]{##4\kern1pt}%
    \oldinputminted{#1}{#2}}}
 % Show three example images.
 \def\exampleimages#1#2#3#4{%
