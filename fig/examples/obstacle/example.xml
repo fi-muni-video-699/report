@@ -7,9 +7,4 @@
           <screen condition="pristine" …>…</screen>
           <screen condition="obstacle" …>…</screen>
         </screens>
-      </frame>
-    </frames>
-    …
-  </video>
-  …
-</videos>
+        …

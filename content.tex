@@ -219,27 +219,27 @@ sample, I marked the boundaries of all lit screens and described the pages of
 the lecture slides shown on the screens.
 
 The dataset is represented by an \abbr{XML} document \texttt{dataset.xml} in
-the language \texttt{dataset.xsd} shown in Figure~\ref{fig:schema}. The root
+the language \texttt{schema.xsd} shown in Figure~\ref{fig:schema}. The root
 element of \texttt{dataset.xml} consists of a sequence of recordings
 represented by video elements. I will now describe the individual elements of
 the language.
 
 \begin{figure}
-\leavevmode\kern-0.2\textwidth
-\includegraphics[width=1.4\textwidth]{fig/schema}
-\caption{The \abbr{XML} language \texttt{dataset.xsd} \iffalse produced using the
-  \term{\abbr{XSD} diagram} tool\fi}
-\label{fig:schema}
+  \leavevmode\kern-0.2\textwidth
+  \includegraphics[width=1.4\textwidth]{fig/schema}
+  \caption{The \abbr{XML} language \texttt{schema.xsd} \iffalse produced using the
+    \term{\abbr{XSD} diagram} tool\fi}
+  \label{fig:schema}
 \end{figure}
 
 \afterpage{%
 \begin{landscape}
 \begin{figure}
-\leavevmode\kern-.117\paperheight
-\includegraphics[width=.95\paperheight]{fig/uml}
-\caption{A \abbr{UML} class diagram of the Python interface for the dataset
-  \iffalse produced using the \term{Umbrello} tool\fi}
-\label{fig:uml}
+  \leavevmode\kern-.117\paperheight
+  \includegraphics[width=.95\paperheight]{fig/uml}
+  \caption{A \abbr{UML} class diagram of the Python interface for the dataset
+    \iffalse produced using the \term{Umbrello} tool\fi}
+  \label{fig:uml}
 \end{figure}
 \end{landscape}}
 
@@ -303,10 +303,11 @@ attribute:
   \item[similarity] the type of relation between this lit projection screen and
     a lecture slide page:
     \begin{description}
-      \item[full] the projection screen shows the entire lecture slide, and
-      \item[incremental] the \term{logical page} shown in the projection screen
-        is split to several \term{physical pages} in the lecture slides and
-        incrementally uncovered.
+      \item[full] the projection screen shows the lecture slide page, and
+      \item[incremental] a single \term{logical} lecture slide page is split
+        across several lecture slide pages and incrementally uncovered; the
+        projection screen and the lecture slide page correspond to the same
+        logical page.
     \end{description}
 \end{description}
 Beside the attribute, a keyref element contains a reference to a lecture slide
@@ -361,7 +362,16 @@ images of the recording frames, projection screens, and lecture side pages.
     associated lecture slides in full-screen mode. An example is shown in
     Figure~\ref{fig:example-normal}.
 
-  \begin{figure}[t!]
+  \begin{figure}
+    \showexample{fig/examples/incremental-only}%
+      {frame040000.png}{frame040000-00.png}{slides02-06.png}%
+      {The image file \texttt{frame040000.png}}%
+      {Cropped-out \texttt{fram0040000.png}}%
+      {The image file \texttt{slides02-06.png}}
+    \caption{A screen element with only incrementally matching lecture slides.}
+    \label{fig:example-incremental-only}
+
+    \kern\floatsep
     \showexample{fig/examples/no-keyrefs}%
       {frame004000.png}{frame004000-00.png}{frame004000-01.png}%
       {The image file \texttt{frame004000.png}}%
@@ -370,13 +380,16 @@ images of the recording frames, projection screens, and lecture side pages.
     \caption{Two screen elements with no matching lecture slide pages.}
     \label{fig:example-normal}
   \end{figure}
+  \item[Only incremental matches] In 153 out of the total 683 screen elements,
+    the projection screen shows none of the lecture slide pages; it only shows
+    the same logical page as some of the lecture slide pages. An example is
+    shown in Figure~\ref{fig:example-incremental-only}.
   \item[No matching pages] In 93 out of the total 683 screen elements, the
-    projection screens show none of the lecture slide pages – a condition a
+    projection screen shows none of the lecture slide pages – a condition a
     that system solving task 1b should be able to detect. An example is shown
     in Figure~\ref{fig:example-no-keyrefs}.
 
-  \begin{figure}[!]
-    \kern-9em
+  \begin{figure}
     \showexample{fig/examples/windowed}%
       {frame080000.png}{frame080000-01.png}{slides01-02.png}%
       {The image file \texttt{frame080000.png}}%
