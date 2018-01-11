@@ -4,7 +4,6 @@
       …
       <frame filename="frame040000.png" …>
         <screens>
-          …
           <screen …>
             <keyrefs>
               <keyref similarity="incremental">slides02-06</keyref>

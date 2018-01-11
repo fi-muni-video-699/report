@@ -49,8 +49,9 @@ the low-resolution digital video files.
 The text is structured as follows: In Section~\ref{sec:problem}, I will
 break down the problem into individual tasks and describe the evaluation
 measures. In Section~\ref{sec:dataset}, I will describe the dataset
-that I built for training, model selection, and performance evaluation.
-In Section …
+that I built for training, model selection, and performance evaluation
+and give examples of its structure.
+% TODO: \ldots
 
 \section{Problem statement}
 \label{sec:problem}
@@ -394,12 +395,8 @@ individual types of structure in an increasing order of rarity.
       {The image file \texttt{slides01-12.png}}
     \caption{A screen element that extends beyond the bounds of the recording.}
     \label{fig:example-beyond-bounds}
-  \end{figure}
-  \item[A screen beyond bounds] In 108 out of the total 683 screen elements,
-    the projection screen is captured only partially in the recording. An
-    example is shown in Figure~\ref{fig:example-beyond-bounds}.
 
-  \begin{figure}
+    \kern\floatsep
     \inputminted{xml}{fig/examples/no-keyrefs/example.xml}\par
     \showthreeimages{fig/examples/no-keyrefs}%
       {frame004000.png}{frame004000-00.png}{frame004000-01.png}%
@@ -408,8 +405,16 @@ individual types of structure in an increasing order of rarity.
       {Cropped-out \texttt{frame004000.png} (R)}
     \caption{Two screen elements with no matching lecture slide pages.}
     \label{fig:example-no-keyrefs}
+  \end{figure}
+  \item[A screen beyond bounds] In 108 out of the total 683 screen elements,
+    the projection screen is captured only partially in the recording. An
+    example is shown in Figure~\ref{fig:example-beyond-bounds}.
+  \item[No matching pages] In 93 out of the total 683 screen elements, the
+    projection screen shows none of the lecture slide pages – a condition a
+    that system solving task 1b should be able to detect. An example is shown
+    in Figure~\ref{fig:example-no-keyrefs}.
 
-    \kern\floatsep
+  \begin{figure}
     \inputminted{xml}{fig/examples/incremental-only/example.xml}\par
     \showthreeimages{fig/examples/incremental-only}%
       {frame040000.png}{frame040000-00.png}{slides02-06.png}%
@@ -418,28 +423,28 @@ individual types of structure in an increasing order of rarity.
       {The image file \texttt{slides02-06.png}}
     \caption{A screen element with only incrementally matching lecture slides.}
     \label{fig:example-incremental-only}
-  \end{figure}
-  \item[No matching pages] In 93 out of the total 683 screen elements, the
-    projection screen shows none of the lecture slide pages – a condition a
-    that system solving task 1b should be able to detect. An example is shown
-    in Figure~\ref{fig:example-no-keyrefs}.
-  \item[Only incremental matches] In 60 out of the total 683 screen elements,
-    the projection screen shows none of the lecture slide pages; it shows only
-    the same logical page as some of the lecture slide pages. An example is
-    shown in Figure~\ref{fig:example-incremental-only}.
 
-  \begin{figure}
+    \kern\floatsep
     \inputminted{xml}{fig/examples/windowed/example.xml}\par
     \showthreeimages{fig/examples/windowed}%
       {frame080000.png}{frame080000-01.png}{slides01-02.png}%
       {The image file \texttt{frame080000.png}}%
       {Cropped-out \texttt{frame080000.png}}%
       {The image file \texttt{slides01-02.png}}
-    \caption{A screen element showing a lecture slide in a window rather
+    \caption{A screen element showing a lecture slide page in a window rather
       than in a full-screen mode.}
     \label{fig:example-windowed}
+  \end{figure}
+  \item[Only incremental matches] In 60 out of the total 683 screen elements,
+    the projection screen shows none of the lecture slide pages; it shows only
+    the same logical page as some of the lecture slide pages. An example is
+    shown in Figure~\ref{fig:example-incremental-only}.
+  \item[Windowed lecture slide] In 6 out of the total 683 screen elements,
+    the projection screen shows a lecture slidep page in a window rather than
+    in a full-screen mode. An example is shown in
+    Figure~\ref{fig:example-windowed}.
 
-    \kern\floatsep
+  \begin{figure}
     \inputminted{xml}{fig/examples/obstacle/example.xml}\par
     \showthreeimages{fig/examples/obstacle}%
       {frame090000.png}{frame090000-01.png}{slides01-28.png}%
@@ -450,9 +455,6 @@ individual types of structure in an increasing order of rarity.
       between the camera lens and the projection screen.}
     \label{fig:example-obstacle}
   \end{figure}
-  \item[Windowed lecture slide] In 6 out of the total 683 screen elements,
-    the projection screen shows a lecture slide in a window rather than in a
-    full-screen mode. An example is shown in Figure~\ref{fig:example-windowed}.
   \item[Obscured projection screen] In 5 out of the total 683 screen elements,
     the projection screen is partially obscured by an obstacle positioned
     between the camera lens and the screen. An example is shown in
