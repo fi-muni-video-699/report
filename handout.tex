@@ -28,6 +28,9 @@
 \def\abbr#1{\textsc{\MakeLowercase{#1}}}
 \let\term\emph
 \let\note\footnote
+\makeatletter\newenvironment{listings}{% Remove vertical spacing between
+  \vskip\topsep                        % verbatim environments.
+  \let\FV@ListVSpace\relax\topsep=0pt \partopsep=0pt}{}\makeatother
 % Remove rectangles around bad syntax in \inputminted.
 \let\oldinputminted\inputminted\renewcommand\inputminted[2]{%
   {\renewcommand\fcolorbox[4][rgb]{##4\kern1pt}%

@@ -340,7 +340,31 @@ the following attribute:
 
 The dataset is distributed along with a Python interface implemented in files
 \texttt{dataset.py} and \texttt{review.py} whose class diagram is shown in
-Figure~\ref{fig:uml}.
+Figure~\ref{fig:uml}. Load the dataset as follows:
+\begin{listings}
+\begin{minted}{bash}
+$ git clone git@gitlab.fi.muni.cz:xnovot32/fi-muni-video-699 dataset
+$ mkvirtualenv -p $(which python3) dataset
+(dataset) $ pip install --upgrade pip
+(dataset) $ pip install --requirement dataset/requirements.txt
+(dataset) $ python
+\end{minted}
+\begin{minted}{python}
+>>> import logging
+>>> from dataset import Dataset
+>>> logging.basicConfig(level=logging.INFO, format="%(message)s")
+>>> dataset = Dataset("dataset")
+\end{minted}
+\begin{verbatim}
+Validating the dataset …
+Done validating the dataset.
+Processing the dataset …
+Done processing the dataset, which contains:
+- 17 videos containing 409 frames with 683 screens (93 non-matched)
+  and 699 keyrefs, and
+- 25 documents containing 925 pages.
+\end{verbatim}
+\end{listings}
 
 \subsection{Examples}
 To give a better sense of the structure of the dataset, I will now give several
