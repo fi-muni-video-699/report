@@ -49,8 +49,10 @@ the low-resolution digital video files.
 The text is structured as follows: In Section~\ref{sec:problem}, I will
 break down the problem into individual tasks and describe the evaluation
 measures. In Section~\ref{sec:dataset}, I will describe the dataset
-that I built for training, model selection, and performance evaluation
-and give examples of its structure.
+that I built for the training, model selection, and performance evaluation
+of systems solving the tasks. In Section~\ref{sec:system-description},
+I will describe a baseline system that solves task 1.
+
 % TODO: \ldots
 
 \section{Problem statement}
@@ -378,7 +380,7 @@ individual types of structure in an increasing order of rarity.
     \showthreeimages{fig/examples/normal}%
       {frame006000.png}{frame006000-00.png}{slides01-30.png}%
       {The image file \texttt{frame006000.png}}%
-      {Cropped-out \texttt{frame006000.png}}%
+      {A cropped-out \texttt{frame006000.png}}%
       {The image file \texttt{slides01-30.png}}
     \caption{A screen element in the usual case. Both the abbreviated code
       of the \texttt{dataset.xml} document (above) and the recording frame,
@@ -397,7 +399,7 @@ individual types of structure in an increasing order of rarity.
     \showtwoimages{fig/examples/incremental}%
       {frame052000.png}{frame052000-01.png}%
       {The image file \texttt{frame052000.png}}%
-      {Cropped-out \texttt{frame052000.png}}\par
+      {A cropped-out \texttt{frame052000.png}}\par
     \showthreeimages{fig/examples/incremental}%
       {slides01-31.png}{slides01-32.png}{slides01-33.png}%
       {The image file \texttt{slides01-31.png}}%
@@ -416,7 +418,7 @@ individual types of structure in an increasing order of rarity.
     \showthreeimages{fig/examples/beyond-bounds}%
       {frame004000.png}{frame004000-00.png}{slides01-12.png}%
       {The image file \texttt{frame004000.png}}%
-      {Cropped-out \texttt{frame004000.png}}%
+      {A cropped-out \texttt{frame004000.png}}%
       {The image file \texttt{slides01-12.png}}
     \caption{A screen element that extends beyond the bounds of the recording.}
     \label{fig:example-beyond-bounds}
@@ -426,8 +428,8 @@ individual types of structure in an increasing order of rarity.
     \showthreeimages{fig/examples/no-keyrefs}%
       {frame004000.png}{frame004000-00.png}{frame004000-01.png}%
       {The image file \texttt{frame004000.png}}%
-      {Cropped-out \texttt{frame004000.png} (L)}%
-      {Cropped-out \texttt{frame004000.png} (R)}
+      {A cropped-out \texttt{frame004000.png} (L)}%
+      {A cropped-out \texttt{frame004000.png} (R)}
     \caption{Two screen elements with no matching lecture slide pages.}
     \label{fig:example-no-keyrefs}
   \end{figure}
@@ -435,8 +437,8 @@ individual types of structure in an increasing order of rarity.
     the projection screen is captured only partially in the recording. An
     example is shown in Figure~\ref{fig:example-beyond-bounds}.
   \item[No matching pages] In 93 out of the total 683 screen elements, the
-    projection screen shows none of the lecture slide pages – a condition a
-    that system solving task 1b should be able to detect. An example is shown
+    projection screen shows none of the lecture slide pages – a condition
+    that a system solving task 1b should be able to detect. An example is shown
     in Figure~\ref{fig:example-no-keyrefs}.
 
   \begin{figure}
@@ -444,7 +446,7 @@ individual types of structure in an increasing order of rarity.
     \showthreeimages{fig/examples/incremental-only}%
       {frame040000.png}{frame040000-00.png}{slides02-06.png}%
       {The image file \texttt{frame040000.png}}%
-      {Cropped-out \texttt{fram0040000.png}}%
+      {A cropped-out \texttt{frame0040000.png}}%
       {The image file \texttt{slides02-06.png}}
     \caption{A screen element with only incrementally matching lecture slides.}
     \label{fig:example-incremental-only}
@@ -454,7 +456,7 @@ individual types of structure in an increasing order of rarity.
     \showthreeimages{fig/examples/windowed}%
       {frame080000.png}{frame080000-01.png}{slides01-02.png}%
       {The image file \texttt{frame080000.png}}%
-      {Cropped-out \texttt{frame080000.png}}%
+      {A cropped-out \texttt{frame080000.png}}%
       {The image file \texttt{slides01-02.png}}
     \caption{A screen element showing a lecture slide page in a window rather
       than in a full-screen mode.}
@@ -474,7 +476,7 @@ individual types of structure in an increasing order of rarity.
     \showthreeimages{fig/examples/obstacle}%
       {frame090000.png}{frame090000-01.png}{slides01-28.png}%
       {The image file \texttt{frame090000.png}}%
-      {Cropped-out \texttt{frame090000.png}}%
+      {A cropped-out \texttt{frame090000.png}}%
       {The image file \texttt{slides01-28.png}}
     \caption{A screen element obscured by an obstacle (a blackboard) positioned
       between the camera lens and the projection screen.}
@@ -487,6 +489,11 @@ individual types of structure in an increasing order of rarity.
 \end{description}
 
 \section{System description}
+\label{sec:system-description}
+To provide a baseline for future systems and a reference for using the Python
+interface for the dataset, I implemented a system that solves task 1. In this
+section, I will give a description of its structure and the used techniques.
+
 \section{Experimental setup}
 \section{Results}
 \section{Conclusion}
