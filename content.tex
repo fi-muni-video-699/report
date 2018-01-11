@@ -73,22 +73,15 @@ than in a full-screen mode. Therefore, finding the position of a projection
 screen and finding the position of a lecture slide page within a
 \term{projection screen} become two distinct tasks.
 
-\paragraph{Scene} Due to the defects in the optical system of any camera, a
-lecture room recording will suffer from a number of \term{aberrations} such as
-defocus and distortion. In addition, if the camera is not perpendicular to a
-projection screen, an \term{inverse perspective transform} of the recording
-will be necessary to make the region corresponding to a projection screen
-rectangular.
-
-Let $\mathcal X$ be the \term{color space} of the lecture slides, $\mathcal Y$
-the color space of the \term{projector}, and $\Phi_{\mathcal X},\Phi_{\mathcal
-Y}$ the maps to the common color space $\mathbb K$. If the overlap between
-$\Phi_{\mathcal X}(\mathcal X)$ and $\Phi_{\mathcal Y}(\mathcal Y)$ is small,
-$\Phi^{-1}_{\mathcal Y}(\Phi_{\mathcal X}(\mathcal X))$ will be a poor
-representation of $\mathcal X$. Even if $\Phi_{\mathcal X}(\mathcal
-X)\approx\Phi_{\mathcal Y}(\mathcal Y)$, the \term{reflectance} of the
-projection screen surface will distort the colors.
-
+\paragraph{Scene} Let $\mathcal X$ be the \term{color space} of the lecture
+slides, $\mathcal Y$ the color space of the \term{projector}, and
+$\Phi_{\mathcal X},\Phi_{\mathcal Y}$ the maps to the common color space
+$\mathbb K$. If the overlap between $\Phi_{\mathcal X}(\mathcal X)$ and
+$\Phi_{\mathcal Y}(\mathcal Y)$ is small, $\Phi^{-1}_{\mathcal
+Y}(\Phi_{\mathcal X}(\mathcal X))$ will be a poor representation of $\mathcal
+X$. Even if $\Phi_{\mathcal X}(\mathcal X)\approx\Phi_{\mathcal Y}(\mathcal
+Y)$, the \term{reflectance} of the projection screen surface will distort the
+colors.
 Due to the lightning conditions, the projection screen will in general be
 \term{unevenly lit}.
 
@@ -99,7 +92,16 @@ screen may partially obscure the recorded lecture slides.
 the presence of light sources that produce different color spectra compared to
 \term{blackbodies}, and the potentially small overlap between $\Phi_{\mathcal
 Y}(\mathcal Y)$ and $\Phi_{\mathcal Z}(\mathcal Z)$, where $\mathcal Z$ is the
-color space of the projector, will further distort the colors.
+color space of the camera, will further distort the colors.
+
+Due to the defects in the optical system of the camera, a lecture room
+recording will suffer from a number of \term{aberrations} such as defocus and
+distortion. In addition, if the camera is not perpendicular to a projection
+screen, an \term{inverse perspective transform} of the recording will be
+necessary to \term{crop out} the region corresponding to a projection screen
+and make it rectangular. Given an incorrectly positioned camera, or a camera
+with \term{telephoto lens}, portions of the projection screen will fall
+\term{beyond the bounds} of the captured scene.
 
 Unlike lecture slides, which are generally provided in the form of vector
 \abbr{PDF} documents, the resulting digital video files are a result of
@@ -382,6 +384,20 @@ individual types of structure in an increasing order of rarity.
     the projection screen shows only the same logical page as some of the
     lecture slide pages. An example is shown in
     Figure~\ref{fig:example-incremental}.
+
+  \begin{figure}
+    \inputminted{xml}{fig/examples/beyond-bounds/example.xml}\par
+    \showthreeimages{fig/examples/beyond-bounds}%
+      {frame004000.png}{frame004000-00.png}{slides01-12.png}%
+      {The image file \texttt{frame004000.png}}%
+      {Cropped-out \texttt{frame004000.png}}%
+      {The image file \texttt{slides01-12.png}}
+    \caption{A screen element that extends beyond the bounds of the recording.}
+    \label{fig:example-beyond-bounds}
+  \end{figure}
+  \item[A screen beyond bounds] In 108 out of the total 683 screen elements,
+    the projection screen is captured only partially in the recording. An
+    example is shown in Figure~\ref{fig:example-beyond-bounds}.
 
   \begin{figure}
     \inputminted{xml}{fig/examples/no-keyrefs/example.xml}\par
