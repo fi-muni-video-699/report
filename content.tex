@@ -203,6 +203,7 @@ distribution of recordings as substitutes.
 
 The dataset has been published in a Git repository at
 \url{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-699}.
+% TODO: Document the license, make the repository public (move the GitHub perhaps)?
 
 \subsection{Dataset structure}
 The dataset consists of 17 recordings. For the purpose of solving tasks 1 and
@@ -348,8 +349,9 @@ images of the recording frames, projection screens, and lecture side pages.
     \exampleimages{fig/examples/normal}%
       {frame006000.png}{frame006000-00.png}{slides01-30.png}
     \caption{A screen element in the usual case. Both the abbreviated code
-      (above) and the recording frame, cropped-out projection screen, and the
-      lecture slide page (below) are shown.}
+      of the \texttt{dataset.xml} document (above) and the recording frame,
+      cropped-out projection screen, and the lecture slide page (below) are
+      shown.}
     \label{fig:example-normal}
   \end{figure}
   \item[The usual case] For 371 out of the total 683 screen elements, the
@@ -357,6 +359,23 @@ images of the recording frames, projection screens, and lecture side pages.
     between the camera lens and the screen and it shows a single page from the
     associated lecture slides in full-screen mode. An example is shown in
     Figure~\ref{fig:example-normal}.
+
+  \begin{figure}
+    {\renewcommand\fcolorbox[4][rgb]{#4\kern1pt}% Remove rectangles around bad syntax.
+     \inputminted{xml}{fig/examples/obstacle/example.xml}}
+    \exampleimages{fig/examples/obstacle}%
+      {frame090000.png}{frame090000-01.png}{slides01-28.png}
+    \caption{A screen element obscured by an obstacle positioned between the
+      camera lens and the projection screen. Both the abbreviated code of the
+      \texttt{dataset.xml} document (above) and the recording frame,
+      cropped-out projection screen, and the lecture slide page (below) are
+      shown.}
+    \label{fig:example-obstacle}
+  \end{figure}
+  \item[Obscured projection screen] For 5 out of the total 683 screen elements,
+    the projection screen is partially obscured by an obstacle positioned
+    between the camera lens and the screen. An example is shown in
+    Figure~\ref{fig:example-obstacle}
 \end{description}
 
 \section{System description}

@@ -1,0 +1,15 @@
+<videos>
+  <video dirname="MA010-D1-20151015.mp4" …>
+    <frames>
+      …
+      <frame filename="frame090000.png" …>
+        <screens>
+          <screen condition="pristine" …>…</screen>
+          <screen condition="obstacle" …>…</screen>
+        </screens>
+      </frame>
+    </frames>
+    …
+  </video>
+  …
+</videos>
