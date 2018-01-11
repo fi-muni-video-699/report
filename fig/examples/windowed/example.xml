@@ -1,0 +1,16 @@
+<videos>
+  <video dirname="PA103-D2-20150324.mp4" …>
+    <frames>
+      …
+      <frame filename="frame080000.png" …>
+        <screens>
+          …
+          <screen condition="windowed" …>…</screen>
+        </screens>
+      </frame>
+      …
+    </frames>
+    …
+  </video>
+  …
+</videos>

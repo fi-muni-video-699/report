@@ -25,6 +25,11 @@
 \def\abbr#1{\textsc{\MakeLowercase{#1}}}
 \let\term\emph
 \let\note\footnote
+% Remove rectangles around bad syntax in \inputminted.
+\let\oldinputminted\inputminted\renewcommand\inputminted[2]{%
+  {\renewcommand\fcolorbox[4][rgb]{#4\kern1pt}%
+   \oldinputminted{#1}{#2}}}
+% Show three example images.
 \def\exampleimages#1#2#3#4{%
   \medskip\leavevmode\kern-0.2\textwidth
   \begin{minipage}{0.46\textwidth}%

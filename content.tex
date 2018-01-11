@@ -345,6 +345,7 @@ images of the recording frames, projection screens, and lecture side pages.
 
 \begin{description}
   \begin{figure}
+    \thisfloatpagestyle{empty}
     \inputminted{xml}{fig/examples/normal/example.xml}
     \exampleimages{fig/examples/normal}%
       {frame006000.png}{frame006000-00.png}{slides01-30.png}
@@ -354,28 +355,37 @@ images of the recording frames, projection screens, and lecture side pages.
       shown.}
     \label{fig:example-normal}
   \end{figure}
-  \item[The usual case] For 371 out of the total 683 screen elements, the
+  \item[The usual case] In 371 out of the total 683 screen elements, the
     projection screen is captured fully without any obstacles positioned
     between the camera lens and the screen and it shows a single page from the
     associated lecture slides in full-screen mode. An example is shown in
     Figure~\ref{fig:example-normal}.
 
-  \begin{figure}
-    {\renewcommand\fcolorbox[4][rgb]{#4\kern1pt}% Remove rectangles around bad syntax.
-     \inputminted{xml}{fig/examples/obstacle/example.xml}}
+  \begin{figure}[!]
+    \thisfloatpagestyle{empty}
+    \kern-9em
+    \inputminted{xml}{fig/examples/windowed/example.xml}
+    \exampleimages{fig/examples/windowed}%
+      {frame080000.png}{frame080000-01.png}{slides01-2.png}
+    \caption{A screen element showing a lecture slide in a window rather
+      than in a full-screen model.}
+    \label{fig:example-windowed}
+
+    \kern\floatsep
+    \inputminted{xml}{fig/examples/obstacle/example.xml}
     \exampleimages{fig/examples/obstacle}%
       {frame090000.png}{frame090000-01.png}{slides01-28.png}
     \caption{A screen element obscured by an obstacle positioned between the
-      camera lens and the projection screen. Both the abbreviated code of the
-      \texttt{dataset.xml} document (above) and the recording frame,
-      cropped-out projection screen, and the lecture slide page (below) are
-      shown.}
+      camera lens and the projection screen.}
     \label{fig:example-obstacle}
   \end{figure}
-  \item[Obscured projection screen] For 5 out of the total 683 screen elements,
+  \item[Windowed lecture slide] In 6 out of the total 683 screen elements,
+    the projection screen shows a lecture slide in a window rather than in a
+    full-screen mode. An example is shown in Figure~\ref{fig:example-windowed}.
+  \item[Obscured projection screen] In 5 out of the total 683 screen elements,
     the projection screen is partially obscured by an obstacle positioned
     between the camera lens and the screen. An example is shown in
-    Figure~\ref{fig:example-obstacle}
+    Figure~\ref{fig:example-obstacle}.
 \end{description}
 
 \section{System description}
