@@ -235,7 +235,6 @@ the language.
 \afterpage{%
 \begin{landscape}
 \begin{figure}
-\thisfloatpagestyle{empty}
 \leavevmode\kern-.117\paperheight
 \includegraphics[width=.95\paperheight]{fig/uml}
 \caption{A \abbr{UML} class diagram of the Python interface for the dataset
@@ -345,10 +344,11 @@ images of the recording frames, projection screens, and lecture side pages.
 
 \begin{description}
   \begin{figure}
-    \thisfloatpagestyle{empty}
-    \inputminted{xml}{fig/examples/normal/example.xml}
-    \exampleimages{fig/examples/normal}%
-      {frame006000.png}{frame006000-00.png}{slides01-30.png}
+    \showexample{fig/examples/normal}%
+      {frame006000.png}{frame006000-00.png}{slides01-30.png}%
+      {The image file \texttt{frame006000.png}}%
+      {Cropped-out \texttt{frame006000.png}}%
+      {The image file \texttt{slides01-30.png}}
     \caption{A screen element in the usual case. Both the abbreviated code
       of the \texttt{dataset.xml} document (above) and the recording frame,
       cropped-out projection screen, and the lecture slide page (below) are
@@ -361,20 +361,37 @@ images of the recording frames, projection screens, and lecture side pages.
     associated lecture slides in full-screen mode. An example is shown in
     Figure~\ref{fig:example-normal}.
 
+  \begin{figure}[t!]
+    \showexample{fig/examples/no-keyrefs}%
+      {frame004000.png}{frame004000-00.png}{frame004000-01.png}%
+      {The image file \texttt{frame004000.png}}%
+      {Cropped-out \texttt{frame004000.png} (L)}%
+      {Cropped-out \texttt{frame004000.png} (R)}
+    \caption{Two screen elements with no matching lecture slide pages.}
+    \label{fig:example-normal}
+  \end{figure}
+  \item[No matching pages] In 93 out of the total 683 screen elements, the
+    projection screens show none of the lecture slide pages – a condition a
+    that system solving task 1b should be able to detect. An example is shown
+    in Figure~\ref{fig:example-no-keyrefs}.
+
   \begin{figure}[!]
-    \thisfloatpagestyle{empty}
     \kern-9em
-    \inputminted{xml}{fig/examples/windowed/example.xml}
-    \exampleimages{fig/examples/windowed}%
-      {frame080000.png}{frame080000-01.png}{slides01-02.png}
+    \showexample{fig/examples/windowed}%
+      {frame080000.png}{frame080000-01.png}{slides01-02.png}%
+      {The image file \texttt{frame080000.png}}%
+      {Cropped-out \texttt{frame080000.png}}%
+      {The image file \texttt{slides01-02.png}}
     \caption{A screen element showing a lecture slide in a window rather
       than in a full-screen mode.}
     \label{fig:example-windowed}
 
     \kern\floatsep
-    \inputminted{xml}{fig/examples/obstacle/example.xml}
-    \exampleimages{fig/examples/obstacle}%
-      {frame090000.png}{frame090000-01.png}{slides01-28.png}
+    \showexample{fig/examples/obstacle}%
+      {frame090000.png}{frame090000-01.png}{slides01-28.png}%
+      {The image file \texttt{frame090000.png}}%
+      {Cropped-out \texttt{frame090000.png}}%
+      {The image file \texttt{slides01-28.png}}
     \caption{A screen element obscured by an obstacle (a blackboard) positioned
       between the camera lens and the projection screen.}
     \label{fig:example-obstacle}

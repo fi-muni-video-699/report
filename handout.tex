@@ -11,7 +11,9 @@
 \usepackage{newunicodechar}
 % Make the … character take up only a single em in code listings.
 \newunicodechar{…}{\kern-.20em.\kern-.32em.\kern-.32em.\kern-.20em}
-\usepackage{afterpage,floatpag,pdflscape}
+\usepackage{floatpag}
+\floatpagestyle{empty}
+\usepackage{afterpage,pdflscape}
 \usepackage{hyperref,graphicx,booktabs}
 \usepackage[
   backend=biber,
@@ -30,27 +32,22 @@
   {\renewcommand\fcolorbox[4][rgb]{##4\kern1pt}%
    \oldinputminted{#1}{#2}}}
 % Show three example images.
-\def\exampleimages#1#2#3#4{%
+\def\showexample#1#2#3#4#5#6#7{%
+  \inputminted{xml}{#1/example.xml}
   \medskip\leavevmode\kern-0.2\textwidth
   \begin{minipage}{0.46\textwidth}%
     \includegraphics[width=\textwidth,height=0.8\textwidth]{#1/#2}%
-    \begin{center}
-      Image file \texttt{#2}
-    \end{center}
+    \begin{center}#5\end{center}
   \end{minipage}\kern.01\textwidth
   \begin{minipage}{0.46\textwidth}%
     \includegraphics[width=\textwidth,height=0.8\textwidth]{#1/#3}%
-    \begin{center}
-      Cropped out \texttt{#2}
-    \end{center}
+    \begin{center}#6\end{center}
   \end{minipage}\kern.01\textwidth
   \begin{minipage}{0.46\textwidth}%
     {\setlength{\fboxsep}{0pt}%
      \setlength{\fboxrule}{.5pt}%
      \fbox{\includegraphics[width=\textwidth,height=0.8\textwidth]{#1/#4}}}
-    \begin{center}
-      Image file \texttt{#4}
-    \end{center}
+    \begin{center}#7\end{center}
   \end{minipage}}
 \begin{document}
 \input content
