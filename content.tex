@@ -339,13 +339,15 @@ The dataset is distributed along with a Python interface implemented in files
 Figure~\ref{fig:uml}.
 
 \subsection{Examples}
-To give a better sense of the structure and the content of the dataset, I will
-now give several examples along with the corresponding \abbr{XML} code, and the
-images of the recording frames, projection screens, and lecture side pages.
+To give a better sense of the structure of the dataset, I will now give several
+examples along with the corresponding \abbr{XML} code, and the images of the
+recording frames, projection screens, and lecture side pages. I sorted the
+individual types of structure in an increasing order of rarity.
 
 \begin{description}
   \begin{figure}
-    \showexample{fig/examples/normal}%
+    \inputminted{xml}{fig/examples/normal/example.xml}\par
+    \showthreeimages{fig/examples/normal}%
       {frame006000.png}{frame006000-00.png}{slides01-30.png}%
       {The image file \texttt{frame006000.png}}%
       {Cropped-out \texttt{frame006000.png}}%
@@ -363,34 +365,56 @@ images of the recording frames, projection screens, and lecture side pages.
     Figure~\ref{fig:example-normal}.
 
   \begin{figure}
-    \showexample{fig/examples/incremental-only}%
+    \inputminted{xml}{fig/examples/incremental/example.xml}\par
+    \showtwoimages{fig/examples/incremental}%
+      {frame052000.png}{frame052000-01.png}%
+      {The image file \texttt{frame052000.png}}%
+      {Cropped-out \texttt{frame052000.png}}\par
+    \showthreeimages{fig/examples/incremental}%
+      {slides01-31.png}{slides01-32.png}{slides01-33.png}%
+      {The image file \texttt{slides01-31.png}}%
+      {The image file \texttt{slides01-32.png}}%
+      {The image file \texttt{slides01-33.png}}
+    \caption{A screen element with incrementally matching lecture slides.}
+    \label{fig:example-incremental}
+  \end{figure}
+  \item[Incremental matches] In 125 out of the total 683 screen elements,
+    the projection screen shows only the same logical page as some of the
+    lecture slide pages. An example is shown in
+    Figure~\ref{fig:example-incremental}.
+
+  \begin{figure}
+    \inputminted{xml}{fig/examples/no-keyrefs/example.xml}\par
+    \showthreeimages{fig/examples/no-keyrefs}%
+      {frame004000.png}{frame004000-00.png}{frame004000-01.png}%
+      {The image file \texttt{frame004000.png}}%
+      {Cropped-out \texttt{frame004000.png} (L)}%
+      {Cropped-out \texttt{frame004000.png} (R)}
+    \caption{Two screen elements with no matching lecture slide pages.}
+    \label{fig:example-no-keyrefs}
+
+    \kern\floatsep
+    \inputminted{xml}{fig/examples/incremental-only/example.xml}\par
+    \showthreeimages{fig/examples/incremental-only}%
       {frame040000.png}{frame040000-00.png}{slides02-06.png}%
       {The image file \texttt{frame040000.png}}%
       {Cropped-out \texttt{fram0040000.png}}%
       {The image file \texttt{slides02-06.png}}
     \caption{A screen element with only incrementally matching lecture slides.}
     \label{fig:example-incremental-only}
-
-    \kern\floatsep
-    \showexample{fig/examples/no-keyrefs}%
-      {frame004000.png}{frame004000-00.png}{frame004000-01.png}%
-      {The image file \texttt{frame004000.png}}%
-      {Cropped-out \texttt{frame004000.png} (L)}%
-      {Cropped-out \texttt{frame004000.png} (R)}
-    \caption{Two screen elements with no matching lecture slide pages.}
-    \label{fig:example-normal}
   \end{figure}
-  \item[Only incremental matches] In 153 out of the total 683 screen elements,
-    the projection screen shows none of the lecture slide pages; it only shows
-    the same logical page as some of the lecture slide pages. An example is
-    shown in Figure~\ref{fig:example-incremental-only}.
   \item[No matching pages] In 93 out of the total 683 screen elements, the
     projection screen shows none of the lecture slide pages – a condition a
     that system solving task 1b should be able to detect. An example is shown
     in Figure~\ref{fig:example-no-keyrefs}.
+  \item[Only incremental matches] In 60 out of the total 683 screen elements,
+    the projection screen shows none of the lecture slide pages; it shows only
+    the same logical page as some of the lecture slide pages. An example is
+    shown in Figure~\ref{fig:example-incremental-only}.
 
   \begin{figure}
-    \showexample{fig/examples/windowed}%
+    \inputminted{xml}{fig/examples/windowed/example.xml}\par
+    \showthreeimages{fig/examples/windowed}%
       {frame080000.png}{frame080000-01.png}{slides01-02.png}%
       {The image file \texttt{frame080000.png}}%
       {Cropped-out \texttt{frame080000.png}}%
@@ -400,7 +424,8 @@ images of the recording frames, projection screens, and lecture side pages.
     \label{fig:example-windowed}
 
     \kern\floatsep
-    \showexample{fig/examples/obstacle}%
+    \inputminted{xml}{fig/examples/obstacle/example.xml}\par
+    \showthreeimages{fig/examples/obstacle}%
       {frame090000.png}{frame090000-01.png}{slides01-28.png}%
       {The image file \texttt{frame090000.png}}%
       {Cropped-out \texttt{frame090000.png}}%

@@ -1,0 +1,14 @@
+<videos>
+  <video dirname="IB111-D1-20151211.mp4" …>
+    <frames>
+      …
+      <frame filename="frame052000.png" …>
+        <screens>
+          …
+          <screen …>
+            <keyrefs>
+              <keyref similarity="incremental">slides01-31</keyref>
+              <keyref similarity="full">slides01-32</keyref>
+              <keyref similarity="incremental">slides01-33</keyref>
+            </keyrefs>
+            …
