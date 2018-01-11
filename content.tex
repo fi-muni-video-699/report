@@ -265,10 +265,13 @@ A frame element corresponds to a single frame of a recording and contains the
 following attributes:
 \begin{description}
   \item[number] the frame number in the video file,
-  \item[vgg256] two baseline feature vectors obtained by feeding the entire
-    frame into 256dimensional \term{\abbr{VGG} convolutional neural
-    networks}~\cite{simonyan2014very} and taking the state of the last hidden
-    layer, and% TODO: Add a full description of the neural network used.
+  \item[vgg256] two feature vectors obtained by feeding the entire
+    frame into two 256dimensional \term{\abbr{VGG} convolutional neural
+    networks}~\cite{simonyan2014very} -- the first trained on the ImageNet%
+    \note{\url{http://www.image-net.org/}} image classification dataset and the
+    second trained on the ImageNet and
+    Places2\note{\url{http://places2.csail.mit.edu/}} datasets -- and taking
+    the last hidden layer, and
   \item[filename] the filename of the image file containing the frame.
 \end{description}
 Beside the attributes, a frame element contains a sequence of lit projection
@@ -290,10 +293,9 @@ frame of a recording and contains the following attributes:
         projection screen partially obscures the lecture slide, and
       \item[pristine] none of the above, and
     \end{description}
-  \item[vgg256] two baseline feature vectors obtained by feeding the
-    cropped-out projection screen frame into 256dimensional \abbr{VGG}
-    convolutional neural networks and taking the state of the last hidden
-    layer.
+  \item[vgg256] two feature vectors obtained by feeding the cropped-out
+    projection screen frame into the neural networks described in the frame
+    element.
 \end{description}
 Beside the attributes, a screen element is in a relation to pages of lecture
 slides that is represented by a sequence of keyref elements.
@@ -332,9 +334,8 @@ the following attribute:
   \item[key] a identifier of the page that is unique in the current video element,
   \item[filename] the filename of the image file containing the page,
   \item[number] the number of the page in the \abbr{PDF} document,
-  \item[vgg] two baseline feature vectors obtained by feeding the
-    page into 256dimensional \abbr{VGG} convolutional neural networks and
-    taking the state of the last hidden layer.
+  \item[vgg256] two feature vectors obtained by feeding the page into the
+    neural networks described in the frame element.
 \end{description}
 
 The dataset is distributed along with a Python interface implemented in files
@@ -465,6 +466,11 @@ individual types of structure in an increasing order of rarity.
 \section{Experimental setup}
 \section{Results}
 \section{Conclusion}
+\section*{Acknowledgement}
+Access to \abbr{VGG} convolutional neural networks was kindly provided by
+RNDr.\ David Novák, Ph.D., RNDr.\ Michal Batko, Ph.D., and Mgr.\ Michal Lukáč
+from the Laboratory of Data Intensive Systems and Applications (\abbr{DISA}).
+Their contribution to this work is gratefully acknowledged.
 
 \iffalse
 
