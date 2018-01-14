@@ -1,11 +1,10 @@
-<videos>
-  <video dirname="PB029-D3-20161026.mp4" …>
-    <frames>
-      …
-      <frame filename="frame040000.png" …>
-        <screens>
-          <screen …>
-            <keyrefs>
-              <keyref similarity="incremental">slides02-06</keyref>
-            </keyrefs>
-            …
+<video dirname="PB029-D3-20161026.mp4" …>
+  <frames>
+    …
+    <frame filename="frame040000.png" …>
+      <screens>
+        <screen …>
+          <keyrefs>
+            <keyref similarity="incremental">slides02-06</keyref>
+          </keyrefs>
+          …

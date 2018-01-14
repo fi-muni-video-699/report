@@ -100,11 +100,11 @@ color space of the camera, will further distort the colors.
 Due to the defects in the optical system of the camera, a lecture room
 recording will suffer from a number of \term{aberrations} such as defocus and
 distortion. In addition, if the camera is not perpendicular to a projection
-screen, an \term{inverse perspective transform} of the recording will be
-necessary to \term{crop out} the region corresponding to a projection screen
-and make it rectangular. Given an incorrectly positioned camera, or a camera
-with \term{telephoto lens}, portions of the projection screen will fall
-\term{beyond the bounds} of the captured scene.
+screen, an \term{perspective transformation} of the recording will be necessary to
+\term{crop out} the region corresponding to a projection screen and make it
+rectangular. Given an incorrectly positioned camera, or a camera with
+\term{telephoto lens}, portions of the projection screen will fall \term{beyond
+the bounds} of the captured scene.
 
 Unlike lecture slides, which are generally provided in the form of vector
 \abbr{PDF} documents, the resulting digital video files are a result of
@@ -144,7 +144,7 @@ translation~\cite{sarvaiyaetal09} coupled with scaling may be necessary to
 described in Section~\ref{sec:noise}.
 
 I will frame this task as an \term{information retrieval} (\abbr{IR}) problem,
-i.e. we will be looking for an \abbr{IR} system that ranks pages by their
+i.e.\ we will be looking for an \abbr{IR} system that ranks pages by their
 similarity to a screen and, if there exists a matching page, it will be placed
 first. To compare two systems, we can estimate the expected value of the
 \term{rank} of a matching page produced by each system across one or several
@@ -193,7 +193,8 @@ and one or several test datasets.
 \section{Dataset}
 \label{sec:dataset}
 As a first step in building and evaluating a system solving the above tasks, I
-built a dataset from the recordings published at \url{https://video.muni.cz}.
+built a dataset from the recordings published at
+\href{https://www.video.muni.cz}{video.muni.cz}.
 Although the recordings date as far back as 2004, I restricted myself to the
 recordings from the \abbr{D1}, \abbr{D2}, and \abbr{D3} lecture halls taken
 during 2010--2016. This was mainly due to the difficulty in reaching out to
@@ -207,8 +208,9 @@ the recordings in the dataset; I drew three recordings from the uniform
 distribution of recordings as substitutes.
 
 The dataset has been published in a Git repository at
-\url{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-699}.
-% TODO: Document the license, make the repository public (move the GitHub perhaps)?
+\href{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-699}%
+     {gitlab.fi.muni.cz/xnovot32/fi-muni-video-699}.
+% TODO: Document the license, make the repository public (move to GitHub perhaps)?
 
 \subsection{Dataset structure}
 The dataset consists of 17 recordings. For the purpose of solving tasks 1 and
@@ -231,7 +233,7 @@ the language.
 
 \begin{figure}
   \leavevmode\kern-0.2\textwidth
-  \includegraphics[width=1.4\textwidth]{fig/schema}
+  \includegraphics[width=1.4\textwidth]{fig/structure/schema}
   \caption{The \abbr{XML} language \texttt{schema.xsd} \iffalse produced using the
     \term{\abbr{XSD} diagram} tool\fi}
   \label{fig:schema}
@@ -241,7 +243,7 @@ the language.
 \begin{landscape}
 \begin{figure}
   \leavevmode\kern-.117\paperheight
-  \includegraphics[width=.95\paperheight]{fig/uml}
+  \includegraphics[width=.95\paperheight]{fig/structure/uml}
   \caption{A \abbr{UML} class diagram of the Python interface for the dataset
     \iffalse produced using the \term{Umbrello} tool\fi}
   \label{fig:uml}
@@ -270,10 +272,10 @@ following attributes:
   \item[vgg256] two feature vectors obtained by feeding the entire
     frame into two 256dimensional \term{\abbr{VGG} convolutional neural
     networks}~\cite{simonyan2014very} -- the first trained on the ImageNet%
-    \note{\url{http://www.image-net.org/}} image classification dataset and the
-    second trained on the ImageNet and
-    Places2\note{\url{http://places2.csail.mit.edu/}} datasets -- and taking
-    the last hidden layer, and
+    \note{See \href{http://www.image-net.org/}{image-net.org}.} image
+    classification dataset and the second trained on the ImageNet and
+    Places2\note{See \href{http://places2.csail.mit.edu/}{places2.csail.mit.edu}.}
+    datasets -- and taking the last hidden layer, and
   \item[filename] the filename of the image file containing the frame.
 \end{description}
 Beside the attributes, a frame element contains a sequence of lit projection
@@ -372,7 +374,8 @@ Done processing the dataset, which contains:
 To give a better sense of the structure of the dataset, I will now give several
 examples along with the corresponding \abbr{XML} code, and the images of the
 recording frames, projection screens, and lecture side pages. I sorted the
-individual types of structure in an increasing order of rarity.
+individual types of structure in an increasing order of rarity. Examples
+are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
 
 \begin{description}
   \begin{figure}
@@ -387,6 +390,7 @@ individual types of structure in an increasing order of rarity.
       cropped-out projection screen, and the lecture slide page (below) are
       shown.}
     \label{fig:example-normal}
+    \label{fig:example-first}
   \end{figure}
   \item[The usual case] In 371 out of the total 683 screen elements, the
     projection screen is captured fully without any obstacles positioned
@@ -413,7 +417,7 @@ individual types of structure in an increasing order of rarity.
     lecture slide pages. An example is shown in
     Figure~\ref{fig:example-incremental}.
 
-  \begin{figure}
+  \begin{figure}[!]\vspace{-1em}
     \inputminted{xml}{fig/examples/beyond-bounds/example.xml}\par
     \showthreeimages{fig/examples/beyond-bounds}%
       {frame004000.png}{frame004000-00.png}{slides01-12.png}%
@@ -422,26 +426,23 @@ individual types of structure in an increasing order of rarity.
       {The image file \texttt{slides01-12.png}}
     \caption{A screen element that extends beyond the bounds of the recording.}
     \label{fig:example-beyond-bounds}
+  \end{figure}
+  \item[A screen beyond bounds] In 108 out of the total 683 screen elements,
+    the projection screen is captured only partially in the recording.
+    An example is shown in Figure~\ref{fig:example-beyond-bounds}.
 
+  \begin{figure}
     \kern\floatsep
     \inputminted{xml}{fig/examples/no-keyrefs/example.xml}\par
     \showthreeimages{fig/examples/no-keyrefs}%
       {frame004000.png}{frame004000-00.png}{frame004000-01.png}%
       {The image file \texttt{frame004000.png}}%
-      {A cropped-out \texttt{frame004000.png} (L)}%
-      {A cropped-out \texttt{frame004000.png} (R)}
+      {A cropped-out \texttt{frame004000.png}}%
+      {A cropped-out \texttt{frame004000.png}}
     \caption{Two screen elements with no matching lecture slide pages.}
     \label{fig:example-no-keyrefs}
-  \end{figure}
-  \item[A screen beyond bounds] In 108 out of the total 683 screen elements,
-    the projection screen is captured only partially in the recording. An
-    example is shown in Figure~\ref{fig:example-beyond-bounds}.
-  \item[No matching pages] In 93 out of the total 683 screen elements, the
-    projection screen shows none of the lecture slide pages – a condition
-    that a system solving task 1b should be able to detect. An example is shown
-    in Figure~\ref{fig:example-no-keyrefs}.
 
-  \begin{figure}
+    \kern\floatsep
     \inputminted{xml}{fig/examples/incremental-only/example.xml}\par
     \showthreeimages{fig/examples/incremental-only}%
       {frame040000.png}{frame040000-00.png}{slides02-06.png}%
@@ -450,8 +451,17 @@ individual types of structure in an increasing order of rarity.
       {The image file \texttt{slides02-06.png}}
     \caption{A screen element with only incrementally matching lecture slides.}
     \label{fig:example-incremental-only}
+  \end{figure}
+  \item[No matching pages] In 93 out of the total 683 screen elements, the
+    projection screen shows none of the lecture slide pages – a condition
+    that a system solving task 1b should be able to detect.
+    An example is shown in Figure~\ref{fig:example-no-keyrefs}.
+  \item[Only incremental matches] In 60 out of the total 683 screen elements,
+    the projection screen shows none of the lecture slide pages; it shows only
+    the same logical page as some of the lecture slide pages.
+    An example is shown in Figure~\ref{fig:example-incremental-only}.
 
-    \kern\floatsep
+  \begin{figure}
     \inputminted{xml}{fig/examples/windowed/example.xml}\par
     \showthreeimages{fig/examples/windowed}%
       {frame080000.png}{frame080000-01.png}{slides01-02.png}%
@@ -461,17 +471,8 @@ individual types of structure in an increasing order of rarity.
     \caption{A screen element showing a lecture slide page in a window rather
       than in a full-screen mode.}
     \label{fig:example-windowed}
-  \end{figure}
-  \item[Only incremental matches] In 60 out of the total 683 screen elements,
-    the projection screen shows none of the lecture slide pages; it shows only
-    the same logical page as some of the lecture slide pages. An example is
-    shown in Figure~\ref{fig:example-incremental-only}.
-  \item[Windowed lecture slide] In 6 out of the total 683 screen elements,
-    the projection screen shows a lecture slidep page in a window rather than
-    in a full-screen mode. An example is shown in
-    Figure~\ref{fig:example-windowed}.
 
-  \begin{figure}
+    \kern\floatsep
     \inputminted{xml}{fig/examples/obstacle/example.xml}\par
     \showthreeimages{fig/examples/obstacle}%
       {frame090000.png}{frame090000-01.png}{slides01-28.png}%
@@ -481,11 +482,16 @@ individual types of structure in an increasing order of rarity.
     \caption{A screen element obscured by an obstacle (a blackboard) positioned
       between the camera lens and the projection screen.}
     \label{fig:example-obstacle}
+    \label{fig:example-last}
   \end{figure}
+  \item[Windowed lecture slide] In 6 out of the total 683 screen elements,
+    the projection screen shows a lecture slide page in a window rather than
+    in a full-screen mode. An example is shown in
+    Figure~\ref{fig:example-windowed}.
   \item[Obscured projection screen] In 5 out of the total 683 screen elements,
     the projection screen is partially obscured by an obstacle positioned
-    between the camera lens and the screen. An example is shown in
-    Figure~\ref{fig:example-obstacle}.
+    between the camera lens and the screen.
+    An example is shown in Figure~\ref{fig:example-obstacle}.
 \end{description}
 
 \section{System description}
@@ -493,10 +499,138 @@ individual types of structure in an increasing order of rarity.
 To provide a baseline for future systems and a reference for using the Python
 interface for the dataset, I implemented a system that solves task 1. In this
 section, I will give a description of its structure and the used techniques.
+An implementation of the system has been published in a Git repository at
+\href{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-experiments}%
+     {gitlab.fi.muni.cz/xnovot32/fi-muni-video-experiments}.
+% TODO: Document the license, make the repository public (move to GitHub perhaps)?
+
+\subsection{Preprocessing}
+Prior to solving task 1, the video frame images and lecture slide page images
+are preprocessed in the \texttt{preprocessing.Image.get\_image} method. I will
+now describe the individual steps in order. Examples are shown in figures~%
+\ref{fig:system-preprocessing-first}--\ref{fig:system-preprocessing-last}.
+
+\begin{figure}
+  \showthreeimages{fig/preprocessing}%
+    {page_rgb}{frame_rgb}{other_frame_rgb}%
+    {The image file \texttt{slides01-04.png} ($I_1$)}%
+    {The image file \texttt{frame004000.png} ($I'_2$)}%
+    {The image file \texttt{frame050000.png} ($I'_3$)}\par
+  \showtwoimages{fig/preprocessing}%
+    {screen_rgb}{other_screen_rgb}%
+    {A cropped-out \texttt{frame004000.png} ($I_2$)}%
+    {A cropped-out \texttt{frame050000.png} ($I_3$)}
+  \caption{Cropping out a screen from two different video frame images, one
+    matching the given lecture slide page and the other one not.}
+  \label{fig:system-preprocessing-first}
+
+  \kern\floatsep
+  \showthreeimages{fig/preprocessing}%
+    {page_img_noillumination}{screen_img_noillumination}{other_screen_img_noillumination}%
+    {The relative luminance of $I_1$ ($Y_1$)}%
+    {The relative luminance of $I_2$ ($Y'_2$)}%
+    {The relative luminance of $I_3$ ($Y'_3$)}
+  \caption{Color removal and relative luminance flipping in images $I_1,
+    I_2$, and~$I_3$.}
+\end{figure}
+\begin{description}
+  \item[Cropping out a screen]
+    Since the system does not solve task 2, the system expects to be given the
+    boundaries of a lit projection screen along with a video frame image. By
+    applying a perspective transform~\cite[sec.~2]{eberly11}, I crop out the
+    projection screen out of the frame image.
+  \item[Color removal]
+    As noted in Section~\ref{sec:noise}, I expect a significant mismatch
+    between the colors in a cropped-out projection screen image and the colors
+    in a lecture slide page image. Although the hue differs arbitrarily, I
+    assume that if we disregard uneven illumination, the \term{relative
+    luminance} in the cropped-out projection screen image is an affine
+    transformation of the relative luminance in the corresponding lecture slide
+    page image. Therefore, I reduce an image $I$ to the relative luminance
+    $Y=0.2126\cdot R+0.7152\cdot G+0.0722\cdot B$~\cite[part~2]{stokesetal96},
+    where $R,G$, and $B$ are the red, green, and blue channels of $I$ expressed
+    in the linear \abbr{RGB} color space.
+  \item[Relative luminance flipping]
+    I assume that each lecture slide page can be conceptually broken down into
+    a foreground containing text and figures, and a background.
+    More formally stated, I assume that if we disregard uneven illumination,
+    the relative luminance $Y$ of a lecture slide page image pixel can be
+    accurately modeled as a continuous random variable with a bivariate
+    probability distribution. Under this model, the system needs to first
+    decide whether the foreground is brighter or darker compared to the
+    background region.
+    
+    Given the observation that the background is typically significantly
+    larger that the foreground, I use the Otsu's
+    method~\cite{otsu1979threshold} to threshold~$Y$. If the ratio between the
+    number of pixels above and below the threshold is greater than $1.8$, I
+    assume that the foreground is darker than the background. Otherwise, I
+    \term{fiip} the relative luminance and assign $Y\leftarrow1-Y$.
+
+  \begin{figure}
+    \showtwoimages{fig/preprocessing}%
+      {J}{J_}%
+      {The morphological closing $\gamma(Y'_2)$}%
+      {The morphological closing $\gamma(Y'_3)$}\par
+    \showthreeimages{fig/preprocessing}%
+      {page_img_noillumination}{screen_img}{other_screen_img}%
+      {The relative luminance of $I_1$ ($Y_1$)}%
+      {Evenly illuminated $Y'_2$ ($Y_2$)}%
+      {Evenly illuminated $Y'_3$ ($Y_3$)}
+    \caption{Uneven illumination removal, intensity stretching, and change of
+      size in images $I_1,I_2$, and $I_3$ with a rectangular structuring
+      element of size $\theta_1 = 65$.}
+
+    \kern\floatsep
+    \showthreeimages{fig/preprocessing}%
+      {page_img-bw}{screen_img-bw}{other_screen_img-bw}%
+      {The foreground of $I_1$ ($F_1$)}%
+      {The foreground of $I_2$ ($F_2$)}%
+      {The foreground of $I_3$ ($F_3$)}
+    \caption{Binarozation of images $I_1,I_2$, and $I_3$.}
+    \label{fig:system-preprocessing-last}
+  \end{figure}
+  \item[Uneven illumination removal]
+    To remove the uneven illumination in a cropped-out presentation screen
+    image, I first fill the holes (i.e.\ the foreground pixels) in $Y$ by
+    applying a \term{morphological closing} $\gamma$ with a rectangular
+    \term{structural element} of size $\theta_1$, where $\theta_1$ is a
+    parameter, and with the assumption that fall pixels beyond the image
+    boundaries have the value $\infty$ for \term{morphological erosion} and
+    $-\infty$ for \term{morphological dilation}. I then assign $Y\leftarrow
+    1-(\gamma(Y)-Y)$.  This way, only the depth of the holes is retained and
+    not their difference in elevation caused by uneven illumination.
+  \item[Intensity stretching]
+    As stated above, I assume that the \term{relative luminance} in the
+    cropped-out projection screen image is an affine transformation of the
+    relative luminance in the corresponding lecture slide page image. To make
+    the relative luminance of the two images identical, I perform a
+    \term{linear stretching} of $Y$ and assign
+    $Y\leftarrow\frac{Y-\min(Y)}{\max(Y)-\min(Y)}$.
+  \item[Change of size]
+    To work with homogeneous data, I resize all images to the resolution of
+    $512\times 512$ pixels.
+  \item[Binarization]
+    As stated above, I assume that each lecture slide page can be broken down
+    into a foreground, and a background. For each image, I use
+    the Otsu's method~\cite{otsu1979threshold} to threshold~$Y$ into dark
+    foreground pixels $F$. $F$ is then denoised by applying a
+    \term{morphological opening by reconstruction} with an elliptical
+    structural element of size 3, and by removing any connected regions
+    touching the image boundary.
+    
+\end{description}
 
 \section{Experimental setup}
 \section{Results}
-\section{Conclusion}
+\section{Conclusion and future work}
+\iffalse
+- Polarity flipping is applied before the removal of the uneven illumination.
+- Not all sources of noise were tackled.
+- The processing pipeline has not been tackled at all.
+- Pairwise histograms are ad-hoc.
+\fi
+
 \section*{Acknowledgement}
 Access to \abbr{VGG} convolutional neural networks was kindly provided by
 RNDr.\ David Novák, Ph.D., RNDr.\ Michal Batko, Ph.D., and Mgr.\ Michal Lukáč

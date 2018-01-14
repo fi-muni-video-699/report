@@ -1,9 +1,8 @@
-<videos>
-  <video dirname="MB103-D1-20161122.mp4" …>
-    <frames>
-      <frame filename="frame004000.png" …>
-        <screens>
-          <screen …><keyrefs></keyrefs></screen>
-          <screen …><keyrefs></keyrefs></screen>
-        </screens>
-        …
+<video dirname="MB103-D1-20161122.mp4" …>
+  <frames>
+    <frame filename="frame004000.png" …>
+      <screens>
+        <screen …><keyrefs></keyrefs></screen>
+        <screen …><keyrefs></keyrefs></screen>
+      </screens>
+      …
