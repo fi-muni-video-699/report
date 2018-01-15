@@ -1,7 +1,6 @@
 \title[Lecture slide retrieval]{Slide retrieval based on lecture recordings}
 \author[V.\,Novotný]{Vít Novotný, witiko@mail.muni.cz}
 \institute[FI MU]{Faculty of Informatics, Masaryk University}
-\date{\today}
 \subject{Project report}
 \keywords{information retrieval, image processing, pattern recognition}
 
@@ -209,7 +208,7 @@ distribution of recordings as substitutes.
 
 The dataset has been published in a Git repository at
 \href{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-699}%
-     {gitlab.fi.muni.cz/xnovot32/fi-muni-video-699}.
+     {gitlab.fi.muni.cz\discretionary{/}{}{/}xnovot32/fi-muni-video-699}.
 % TODO: Document the license, make the repository public (move to GitHub perhaps)?
 
 \subsection{Dataset structure}
@@ -232,7 +231,7 @@ represented by video elements. I will now describe the individual elements of
 the language.
 
 \begin{figure}
-  \leavevmode\kern-0.2\textwidth
+  \leavevmode\kern-0.13\textwidth
   \includegraphics[width=1.4\textwidth]{fig/structure/schema}
   \caption{The \abbr{XML} language \texttt{schema.xsd} \iffalse produced using the
     \term{\abbr{XSD} diagram} tool\fi}
@@ -417,7 +416,7 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
     lecture slide pages. An example is shown in
     Figure~\ref{fig:example-incremental}.
 
-  \begin{figure}[!]\vspace{-1em}
+  \begin{figure}
     \inputminted{xml}{fig/examples/beyond-bounds/example.xml}\par
     \showthreeimages{fig/examples/beyond-bounds}%
       {frame004000.png}{frame004000-00.png}{slides01-12.png}%
@@ -426,12 +425,7 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
       {The image file \texttt{slides01-12.png}}
     \caption{A screen element that extends beyond the bounds of the recording.}
     \label{fig:example-beyond-bounds}
-  \end{figure}
-  \item[A screen beyond bounds] In 108 out of the total 683 screen elements,
-    the projection screen is captured only partially in the recording.
-    An example is shown in Figure~\ref{fig:example-beyond-bounds}.
 
-  \begin{figure}
     \kern\floatsep
     \inputminted{xml}{fig/examples/no-keyrefs/example.xml}\par
     \showthreeimages{fig/examples/no-keyrefs}%
@@ -441,8 +435,16 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
       {A cropped-out \texttt{frame004000.png}}
     \caption{Two screen elements with no matching lecture slide pages.}
     \label{fig:example-no-keyrefs}
+  \end{figure}
+  \item[A screen beyond bounds] In 108 out of the total 683 screen elements,
+    the projection screen is captured only partially in the recording.
+    An example is shown in Figure~\ref{fig:example-beyond-bounds}.
+  \item[No matching pages] In 93 out of the total 683 screen elements, the
+    projection screen shows none of the lecture slide pages – a condition
+    that a system solving task 1b should be able to detect.
+    An example is shown in Figure~\ref{fig:example-no-keyrefs}.
 
-    \kern\floatsep
+  \begin{figure}
     \inputminted{xml}{fig/examples/incremental-only/example.xml}\par
     \showthreeimages{fig/examples/incremental-only}%
       {frame040000.png}{frame040000-00.png}{slides02-06.png}%
@@ -451,17 +453,8 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
       {The image file \texttt{slides02-06.png}}
     \caption{A screen element with only incrementally matching lecture slides.}
     \label{fig:example-incremental-only}
-  \end{figure}
-  \item[No matching pages] In 93 out of the total 683 screen elements, the
-    projection screen shows none of the lecture slide pages – a condition
-    that a system solving task 1b should be able to detect.
-    An example is shown in Figure~\ref{fig:example-no-keyrefs}.
-  \item[Only incremental matches] In 60 out of the total 683 screen elements,
-    the projection screen shows none of the lecture slide pages; it shows only
-    the same logical page as some of the lecture slide pages.
-    An example is shown in Figure~\ref{fig:example-incremental-only}.
 
-  \begin{figure}
+    \kern\floatsep
     \inputminted{xml}{fig/examples/windowed/example.xml}\par
     \showthreeimages{fig/examples/windowed}%
       {frame080000.png}{frame080000-01.png}{slides01-02.png}%
@@ -471,8 +464,17 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
     \caption{A screen element showing a lecture slide page in a window rather
       than in a full-screen mode.}
     \label{fig:example-windowed}
+  \end{figure}
+  \item[Only incremental matches] In 60 out of the total 683 screen elements,
+    the projection screen shows none of the lecture slide pages; it shows only
+    the same logical page as some of the lecture slide pages.
+    An example is shown in Figure~\ref{fig:example-incremental-only}.
+  \item[Windowed lecture slide] In 6 out of the total 683 screen elements,
+    the projection screen shows a lecture slide page in a window rather than
+    in a full-screen mode. An example is shown in
+    Figure~\ref{fig:example-windowed}.
 
-    \kern\floatsep
+  \begin{figure}[!t]
     \inputminted{xml}{fig/examples/obstacle/example.xml}\par
     \showthreeimages{fig/examples/obstacle}%
       {frame090000.png}{frame090000-01.png}{slides01-28.png}%
@@ -484,10 +486,6 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
     \label{fig:example-obstacle}
     \label{fig:example-last}
   \end{figure}
-  \item[Windowed lecture slide] In 6 out of the total 683 screen elements,
-    the projection screen shows a lecture slide page in a window rather than
-    in a full-screen mode. An example is shown in
-    Figure~\ref{fig:example-windowed}.
   \item[Obscured projection screen] In 5 out of the total 683 screen elements,
     the projection screen is partially obscured by an obstacle positioned
     between the camera lens and the screen.
@@ -504,10 +502,11 @@ An implementation of the system has been published in a Git repository at
      {gitlab.fi.muni.cz/xnovot32/fi-muni-video-experiments}.
 % TODO: Document the license, make the repository public (move to GitHub perhaps)?
 
+\FloatBarrier
 \subsection{Preprocessing}
-Prior to solving task 1, the video frame images and lecture slide page images
-are preprocessed in the \texttt{preprocessing.Image.get\_image} method. I will
-now describe the individual steps in order. Examples are shown in figures~%
+The video frame images and lecture slide page images are preprocessed in the
+\texttt{preprocessing.Image.get\_image} method. I will now describe the
+individual steps in order of execution. Examples are shown in figures~%
 \ref{fig:system-preprocessing-first}--\ref{fig:system-preprocessing-last}.
 
 \begin{figure}
@@ -566,12 +565,14 @@ now describe the individual steps in order. Examples are shown in figures~%
     number of pixels above and below the threshold is greater than $1.8$, I
     assume that the foreground is darker than the background. Otherwise, I
     \term{fiip} the relative luminance and assign $Y\leftarrow1-Y$.
+    Optionally, this step may be skipped; this choise is controlled by the
+    parameter $\theta_1$.
 
   \begin{figure}
     \showtwoimages{fig/preprocessing}%
       {J}{J_}%
-      {The morphological closing $\gamma(Y'_2)$}%
-      {The morphological closing $\gamma(Y'_3)$}\par
+      {The morphological closing $\gamma_\blacksquare(Y'_2)$}%
+      {The morphological closing $\gamma_\blacksquare(Y'_3)$}\par
     \showthreeimages{fig/preprocessing}%
       {page_img_noillumination}{screen_img}{other_screen_img}%
       {The relative luminance of $I_1$ ($Y_1$)}%
@@ -579,7 +580,7 @@ now describe the individual steps in order. Examples are shown in figures~%
       {Evenly illuminated $Y'_3$ ($Y_3$)}
     \caption{Uneven illumination removal, intensity stretching, and change of
       size in images $I_1,I_2$, and $I_3$ with a rectangular structuring
-      element of size $\theta_1 = 65$.}
+      element of size $\theta_2 = 65$.}
 
     \kern\floatsep
     \showthreeimages{fig/preprocessing}%
@@ -587,15 +588,16 @@ now describe the individual steps in order. Examples are shown in figures~%
       {The foreground of $I_1$ ($F_1$)}%
       {The foreground of $I_2$ ($F_2$)}%
       {The foreground of $I_3$ ($F_3$)}
-    \caption{Binarozation of images $I_1,I_2$, and $I_3$.}
+    \caption{Binarization of images $I_1,I_2$, and $I_3$.}
     \label{fig:system-preprocessing-last}
   \end{figure}
   \item[Uneven illumination removal]
     To remove the uneven illumination in a cropped-out presentation screen
     image, I first fill the holes (i.e.\ the foreground pixels) in $Y$ by
-    applying a \term{morphological closing} $\gamma$ with a rectangular
-    \term{structural element} of size $\theta_1$, where $\theta_1$ is a
-    parameter, and with the assumption that fall pixels beyond the image
+    applying a \term{morphological closing} $\gamma_\blacksquare$ with a
+    rectangular \term{structural element} of size $\theta_2$, where
+    $\theta_2\in\{2^i+1\mid i=0,1,\ldots,\log_2 512\}$
+    is a parameter, and with the assumption that pixels beyond the image
     boundaries have the value $\infty$ for \term{morphological erosion} and
     $-\infty$ for \term{morphological dilation}. I then assign $Y\leftarrow
     1-(\gamma(Y)-Y)$.  This way, only the depth of the holes is retained and
@@ -618,8 +620,87 @@ now describe the individual steps in order. Examples are shown in figures~%
     \term{morphological opening by reconstruction} with an elliptical
     structural element of size 3, and by removing any connected regions
     touching the image boundary.
-    
 \end{description}
+
+\subsection{Extracting features}
+After an image has been preprocessed, descriptors are extracted from the
+relative luminance $Y$ and the foreground $F$. I will now describe the
+individual \term{features} recognized by the system.
+
+\begin{description}
+  \item[Haralick features]
+    52 Haralick texture features~\cite{haralick1973textural} are extracted from $Y$.
+
+  \begin{figure}
+    \showthreeimages{fig/preprocessing}%
+      {page_img-rows}{screen_img-rows}{other_screen_img-rows}%
+      {The morphological dilation $\delta_{{}-{}}(F_1)$}%
+      {The morphological dilation $\delta_{{}-{}}(F_2)$}%
+      {The morphological dilation $\delta_{{}-{}}(F_3)$}
+    \caption{Foreground rows of images $I_1,I_2$, and $I_3$.}
+    \label{fig:system-features-rows}
+
+    \kern\floatsep
+    {\setlength{\fboxrule}{0pt}%
+     \showthreeimages{fig/preprocessing}%
+       {row_histogram-0_0}{row_histogram-0_1}{row_histogram-0_2}%
+       {The histogram of $I_1$'s row heights}%
+       {The histogram of $I_2$'s row heights}%
+       {The histogram of $I_3$'s row heights}\par
+     \showthreeimages{fig/preprocessing}%
+       {row_histogram-1_0}{row_histogram-1_1}{row_histogram-1_2}%
+       {The histogram of $I_1$'s row altitudes}%
+       {The histogram of $I_2$'s row altitudes}%
+       {The histogram of $I_3$'s row altitudes}}
+    \caption{Foreground row histograms of images $I_1,I_2$, and $I_3$.}
+    \label{fig:system-features-row-histograms}
+  \end{figure}
+  \item[Foreground rows]
+    Rows are extracted from $F$ by applying morphological dilation $\delta_{{}-{}}$ with
+    a structural element in the shape of a horizontal line of length $2\times
+    512+1$. An example is shown in Figure~\ref{fig:system-features-rows}.
+    To obtain a fixed number of features, the row heights and altitudes are each
+    represented by a histogram with 16 equal-width bins. An example is shown in
+    Figure~\ref{fig:system-features-row-histograms}. Combined with the number
+    of rows, this yields 33 features.
+
+  \begin{figure}
+    {\setlength{\fboxrule}{0pt}%
+     \showthreeimages{fig/preprocessing}%
+       {histogram-1_0}{histogram-1_1}{histogram-1_2}%
+       {The histogram of $F_1\cdot Y_1$}%
+       {The histogram of $F_2\cdot Y_2$}%
+       {The histogram of $F_3\cdot Y_3$}}
+    \caption{Grayscale histograms of images $I_1,I_2$, and $I_3$ computed from
+      the foreground row pixels.}
+    \label{fig:system-features-grayscale-histogram}
+  \end{figure}
+  \item[Grayscale histogram]
+    A histogram is extracted from $Y$ with 16 equal-width bins. Optionally, the
+    histogram can be extracted only from foreground row pixels and each pixel
+    can be assigned a weight according to its variance across all lecture slide
+    page images in the current video; these choices are controlled by the
+    parameter $\theta_3$. An example is shown in
+    Figure~\ref{fig:system-features-grayscale-histogram}.
+\end{description}
+
+The \texttt{preprocessing.Features.get\_features} method takes the above
+features to produce a single vector of 101 features. Optionally, the feature
+vectors produced by feeding $I$ into two 256dimensional \abbr{VGG}
+convolutional neural networks are also considered, leading to 613 features.
+
+The \texttt{preprocessing.Features.get\_full\_features} method takes all
+80 possible values of the parameters
+$\bm\theta=\{\theta_1,\theta_2,\theta_3\}$, computes the corresponding feature
+vectors, and concatenates them to obtain a \term{full vector} of 8080 or 49040
+features.
+
+The \texttt{preprocessing.Features.get\_pairwise\_features} method takes a
+a lecture slide page image, a cropped-out presentation screen image and
+computes the difference between their full feature vectors to obtain a
+\term{pairwise vector}.
+
+\subsection{Models}
 
 \section{Experimental setup}
 \section{Results}
@@ -632,6 +713,8 @@ now describe the individual steps in order. Examples are shown in figures~%
 \fi
 
 \section*{Acknowledgement}
+% TODO: Acknowledge lecturers.
+
 Access to \abbr{VGG} convolutional neural networks was kindly provided by
 RNDr.\ David Novák, Ph.D., RNDr.\ Michal Batko, Ph.D., and Mgr.\ Michal Lukáč
 from the Laboratory of Data Intensive Systems and Applications (\abbr{DISA}).

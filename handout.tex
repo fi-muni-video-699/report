@@ -13,6 +13,8 @@
 % Make the … character take up only a single em in code listings.
 \newunicodechar{…}{\kern-.20em.\kern-.32em.\kern-.32em.\kern-.20em}
 \usepackage{afterpage,pdflscape,floatpag,placeins}
+\usepackage{bm}
+\usepackage{ifoddpage}
 \pagestyle{myheadings}
 \floatpagestyle{myheadings}
 \usepackage[para]{footmisc}
@@ -37,10 +39,11 @@
   {\renewcommand\fcolorbox[4][rgb]{##4\kern1pt}%
    \oldinputminted{#1}{#2}}}
 % Show three example images along with example XML code.
+\setlength{\fboxsep}{0pt}%
+\setlength{\fboxrule}{.5pt}%
 \def\showthreeimages#1#2#3#4#5#6#7{%
-  {\setlength{\fboxsep}{0pt}%
-   \setlength{\fboxrule}{.5pt}%
-   \medskip\leavevmode\kern-0.2\textwidth
+  {\medskip\leavevmode
+   \checkoddpage\ifoddpage\kern-0.13\textwidth\else\kern-0.27\textwidth\fi
    \begin{minipage}{0.46\textwidth}%
      \fbox{\includegraphics[width=\textwidth,height=0.8\textwidth]{#1/#2}}%
      \begin{center}#5\end{center}
@@ -55,9 +58,8 @@
    \end{minipage}}}
 % Show two additional example images.
 \def\showtwoimages#1#2#3#4#5{%
-  {\setlength{\fboxsep}{0pt}%
-   \setlength{\fboxrule}{.5pt}%
-   \medskip\leavevmode\kern-0.2\textwidth
+  {\medskip\leavevmode
+   \checkoddpage\ifoddpage\kern-0.13\textwidth\else\kern-0.27\textwidth\fi
    \begin{minipage}{0.695\textwidth}%
      \fbox{\includegraphics[width=\textwidth,height=0.8\textwidth]{#1/#2}}%
      \begin{center}#4\end{center}
