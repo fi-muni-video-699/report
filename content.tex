@@ -150,7 +150,7 @@ i.e.\ we will be looking for an \abbr{IR} system that ranks pages by their
 similarity to a screen and, if there exists a matching page, it will be placed
 first. To compare two systems, we can estimate the expected value of the
 \term{rank} of a matching page produced by each system across one or several
-test dataset.
+test datasets.
 
 \paragraph{Task 1b} Given a single cropped-out projection screen and a set of
 lecture slide pages, the task is to decide whether or not the screen matches
@@ -241,17 +241,6 @@ the language.
   \label{fig:schema}
 \end{figure}
 
-\afterpage{%
-\begin{landscape}
-\begin{figure}
-  \leavevmode\kern-.117\paperheight
-  \includegraphics[width=.95\paperheight]{fig/structure/uml}
-  \caption{A \abbr{UML} class diagram of the Python interface for the dataset
-    \iffalse produced using the \term{Umbrello} tool\fi}
-  \label{fig:uml}
-\end{figure}
-\end{landscape}}
-
 \subsubsection*{The video element}
 A video element corresponds to a single lecture recording and contains the
 following attributes:
@@ -315,11 +304,11 @@ attribute:
     a lecture slide page:
     \begin{description}
       \item[full] the projection screen $s$ shows the lecture slide page $p$
-        ($s\sim p$), and
+        ($s\approx p$), and
       \item[incremental] a single \term{logical} lecture slide page is split
         across several lecture slide pages and incrementally uncovered; the
         projection screen $s$ and the lecture slide page $p$ correspond to the
-        same logical page ($s\mathop{\hat\sim}p$).
+        same logical page ($s\sim p$).
     \end{description}
 \end{description}
 Beside the attribute, a keyref element contains a reference to a lecture slide
@@ -328,7 +317,18 @@ page represented the unique identifier of a page element.
 During the task description in Section~\ref{sec:tasks}, I talked somewhat
 vaguely about a projection screen „matching“ a lecture slide page. To give a
 precise definition, a lit projection screen $s$ matches a lecture slide page $p$ if
-and only if \[s\sim p\lor\big(\nexists p'(s\sim p')\land s\mathop{\hat\sim}p\big).\]
+and only if \[s\approx p\lor\big(\nexists p'(s\approx p')\land s\sim p\big).\]
+
+\afterpage{%
+\begin{landscape}
+\begin{figure}
+  \leavevmode\kern-.117\paperheight
+  \includegraphics[width=.95\paperheight]{fig/structure/uml}
+  \caption{A \abbr{UML} class diagram of the Python interface for the dataset
+    \iffalse produced using the \term{Umbrello} tool\fi}
+  \label{fig:uml}
+\end{figure}
+\end{landscape}}
 
 \subsubsection*{The document element}
 A document element corresponds to a single set of lecture slides and contains
@@ -852,34 +852,27 @@ The evaluation is implemented in the \texttt{evaluation} module.
 The dataset consists of 17 videos.
 Since some models are supervised, it is necessary to split the dataset into
 \term{training}, \term{validation}, and \term{test} datasets. The training
-dataset is used to train the models, the validation dataset is to select the
-best-performing model, and the test dataset is used to estimate the performance
-of the selected model.
+dataset is used to train the models, the validation dataset is used to select
+the best-performing model, and the test dataset is used to estimate the
+performance of the selected model.
     
 Rather than actually split the dataset, I use two nested cross-validations; the
 inner 16-fold cross-validation performs the model selection, whereas the outer
 17-fold cross-validation estimates the performance. This approach has the
-advantage of placing \term{confidence intervals} on the evaluation measures and the
-disadvantage of increasing the time complexity of the evaluation by a
+advantage of decreasing the variance of the evaluation measure estimate,
+and the disadvantage of increasing the time complexity of the evaluation by a
 multiplicative factor that is quadratic in the number of cross-validation
 folds. Due to time constraints, only a single step of the outer
-cross-validation was performed, i.e. no confidence intervals are given for the
-performance estimates.
+cross-validation was performed, i.e. only wide confidence intervals are
+given for the performance estimates.
 
 For the task 1a models, I compute the empirical expected value of the rank of a
 matching page. I also compute an empirical 95\% two-sided confidence interval
-by taking the percentiles from the ranks observed at the individual
-cross-validation folds.
-
+by taking the sample quantiles of the observed ranks.
 For the task 1b models, I compute the empirical expected value of the
-misclassification loss. I also estimate the 95\% two-sided confidence interval
-by making a normality assumption about the binomial misclassification loss
-and by taking the percentiles of the normal distribution.
-
-\iffalse
-- Define a match.
-- Define cross-validation.
-\fi
+misclassification loss. I also estimate the 95\% two-sided confidence interval,
+this time by making a normality assumption about the binomial misclassification
+loss.
 
 \section{Results}
 \label{sec:results}
@@ -894,10 +887,33 @@ and by taking the percentiles of the normal distribution.
 \fi
 
 \section*{Acknowledgement}
-% TODO: Acknowledge lecturers.
+The following lecturers, listed in no particular order, kindly consented with
+having recordings of their lectures and their lecture slides made publicly
+available in the dataset:
+RNDr.\ Václav Brožek, Ph.D.,
+RNDr.\ Nikola Beneš, Ph.D.,
+doc.\ Mgr.\ Radek Pelánek, Ph.D.,
+prof.\ RNDr.\ Petr Hliněný, Ph.D.,
+doc.\ RNDr.\ Jan Bouda, Ph.D.,
+prof.\ RNDr.\ Jan Slovák, DrSc.,
+RNDr.\ Radek Ošlejšek, Ph.D.,
+doc.\ RNDr.\ Vlastislav Dohnal, Ph.D.,
+prof.\ RNDr.\ Luděk Matyska, CSc.,
+doc.\ RNDr.\ Eva Hladká, Ph.D.,
+prof.\ Ing.\ Jiří Sochor, CSc.,
+doc.\ RNDr.\ Petr Sojka, Ph.D.,
+Jeffrey Dean, Ph.D.,
+Bc.\ Jakub Hančin,
+RNDr.\ Jaroslav Pelikán, Ph.D.,
+RNDr.\ Jan Kasprzak, Ph.D.,
+doc.\ RNDr.\ Barbora Kozlíková, Ph.D., and
+Mgr.\ Petr Tobola, Ph.D.
+Their contribution to this work is gratefully acknowledged.
 
 Access to \abbr{VGG} convolutional neural networks was kindly provided by
-RNDr.\ David Novák, Ph.D., RNDr.\ Michal Batko, Ph.D., and Mgr.\ Michal Lukáč
+RNDr.\ David Novák, Ph.D.,
+RNDr.\ Michal Batko, Ph.D., and
+Mgr.\ Michal Lukáč
 from the Laboratory of Data Intensive Systems and Applications (\abbr{DISA}).
 Their contribution to this work is gratefully acknowledged.
 
