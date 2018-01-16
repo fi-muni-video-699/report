@@ -53,9 +53,8 @@ that I built for the \term{training}, \term{model selection}, and
 Section~\ref{sec:system-description}, I will describe a baseline system that
 solves task 1. In Section~\ref{sec:experimental-setup}, I will describe
 the evaluation of the baseline system. In Section~\ref{sec:results},
-I will give the evaluation results.
-
-% TODO: \ldots
+I will give the evaluation results. In Section~\ref{sec:conclusion}, I will
+state my conclusion and outline venues for future work.
 
 \section{Problem statement}
 \label{sec:problem}
@@ -209,10 +208,11 @@ For three other recordings, the lecturers would not give consent to including
 the recordings in the dataset; I drew three recordings from the uniform
 distribution of recordings as substitutes.
 
-The dataset has been published in a Git repository at
-\href{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-699}%
-     {gitlab.fi.muni.cz\discretionary{/}{}{/}xnovot32/fi-muni-video-699}.
-% TODO: Document the license, make the repository public (move to GitHub perhaps)?
+The dataset has been published in a Git repository.\footnote{See
+  \href{https://github.com/fi-muni-video-699/dataset}%
+       {github.com/fi-muni-video-699/dataset} or
+  \href{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-699}%
+       {gitlab.fi.muni.cz/xnovot32/fi-muni-video-699}.}
 
 \subsection{Dataset structure}
 The dataset consists of 17 recordings. For the purpose of solving tasks 1 and
@@ -508,10 +508,11 @@ To provide a baseline for future systems and a reference for using the Python
 interface for the dataset, I implemented a baseline system that solves task 1.
 In this section, I will give a description of its structure and the used
 techniques.  An implementation of the system has been published in a Git
-repository at
-\href{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-experiments}%
-     {gitlab.fi.muni.cz/xnovot32/fi-muni-video-experiments}.
-% TODO: Document the license, make the repository public (move to GitHub perhaps)?
+repository.\footnote{See
+  \href{https://github.com/fi-muni-video-699/system}%
+       {github.com/fi-muni-video-699/system} or
+  \href{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-system}%
+       {gitlab.fi.muni.cz/xnovot32/fi-muni-video-system}.}
 
 \FloatBarrier
 \subsection{Preprocessing}
@@ -878,6 +879,8 @@ loss.
 \label{sec:results}
 
 \section{Conclusion and future work}
+\label{sec:conclusion}
+
 \iffalse
 - Polarity flipping is applied before the removal of the uneven illumination.
 - Not all sources of noise were tackled.
