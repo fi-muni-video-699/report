@@ -48,9 +48,11 @@ the low-resolution digital video files.
 The text is structured as follows: In Section~\ref{sec:problem}, I will
 break down the problem into individual tasks and describe the evaluation
 measures. In Section~\ref{sec:dataset}, I will describe the dataset
-that I built for the training, model selection, and performance evaluation
-of systems solving the tasks. In Section~\ref{sec:system-description},
-I will describe a baseline system that solves task 1.
+that I built for the \term{training}, \term{model selection}, and
+\term{performance estimation} of systems solving the tasks. In
+Section~\ref{sec:system-description}, I will describe a baseline system that
+solves task 1. In Section~\ref{sec:experimental-setup}, I will evaluate the
+baseline system.
 
 % TODO: \ldots
 
@@ -77,7 +79,7 @@ screen and finding the position of a lecture slide page within a
 
 \paragraph{Scene} Let $\mathcal X$ be the \term{color space} of the lecture
 slides, $\mathcal Y$ the color space of the \term{projector}, and
-$\Phi_{\mathcal X},\Phi_{\mathcal Y}$ the maps to the common color space
+$\Phi_{\mathcal X},\Phi_{\mathcal Y}$ the maps to a common color space
 $\mathbb K$. If the overlap between $\Phi_{\mathcal X}(\mathcal X)$ and
 $\Phi_{\mathcal Y}(\mathcal Y)$ is small, $\Phi^{-1}_{\mathcal
 Y}(\Phi_{\mathcal X}(\mathcal X))$ will be a poor representation of $\mathcal
@@ -151,13 +153,13 @@ test dataset.
 
 \paragraph{Task 1b} Given a single cropped-out projection screen and a set of
 lecture slide pages, the task is to decide whether or not the screen matches
-any page in the set.  If a task 1a system produces for each screen not only a
-ranking of pages, but also an estimate of distance, similarity, match
+any page in the set.\iffalse If a task 1a system produces for each screen not
+only a ranking of pages, but also an estimate of distance, similarity, match
 confidence, or match probability for each page, and if the random vector of
-these estimates can be expected to have a different probability distribution
-in the positive case (when a screen matches) and in the negative case, then a
+these estimates can be expected to have a different probability distribution in
+the positive case (when a screen matches) and in the negative case, then a
 classifier can be trained on one or several training datasets using the
-measures produced by a task 1a system as features.
+measures produced by a task 1a system as features.\fi
 
 If two systems only produce binary decisions, then we can estimate the expected
 values of the \term{misclassification loss} to compare them. If two systems
@@ -492,6 +494,7 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
     An example is shown in Figure~\ref{fig:example-obstacle}.
 \end{description}
 
+\FloatBarrier
 \section{System description}
 \label{sec:system-description}
 To provide a baseline for future systems and a reference for using the Python
@@ -600,7 +603,7 @@ individual steps in order of execution. Examples are shown in figures~%
     is a parameter, and with the assumption that pixels beyond the image
     boundaries have the value $\infty$ for \term{morphological erosion} and
     $-\infty$ for \term{morphological dilation}. I then assign $Y\leftarrow
-    1-(\gamma(Y)-Y)$.  This way, only the depth of the holes is retained and
+    1-(\gamma_\blacksquare(Y)-Y)$.  This way, only the depth of the holes is retained and
     not their difference in elevation caused by uneven illumination.
   \item[Intensity stretching]
     As stated above, I assume that the \term{relative luminance} in the
@@ -681,7 +684,7 @@ individual \term{features} recognized by the system.
     can be assigned a weight according to its variance across all lecture slide
     page images in the current video; these choices are controlled by the
     parameter $\theta_3$. An example is shown in
-    Figure~\ref{fig:system-features-grayscale-histogram}.
+    Figure~\ref{fig:system-features-relative-luminance}.
 \end{description}
 
 The \texttt{preprocessing.Features.get\_features} method takes the above
@@ -690,8 +693,8 @@ feature vectors produced by feeding $I$ into two 256dimensional \abbr{VGG}
 convolutional neural networks are also considered, leading to 613 features.
 
 The \texttt{preprocessing.Features.get\_full\_features} method takes all
-80 possible values of the parameters
-$\bm\theta=\{\theta_1,\theta_2,\theta_3\}$, computes the corresponding feature
+80 possible values of the parameter
+$\bm\theta=(\theta_1,\theta_2,\theta_3)$, computes the corresponding feature
 vectors, and concatenates them to obtain a \term{full vector} of 8080 or 49040
 features.
 
@@ -705,6 +708,17 @@ Using the extracted features, several pattern recognition \term{models} are
 used to solve task 1. I will now describe the models for solving task 1a.
 
 \begin{description}
+  \item[Row numbers]
+    Given a single cropped-out projection screen and a set of lecture slide
+    pages, the lecture slide pages are ranked according to the absolute value of
+    the difference between the number of foreground rows in the projection
+    screen and in a lecture slide page in ascending order.
+
+    The model is defined in the
+    \texttt{models.task1.subtaska.row\_numbers} \term{module}.
+    It is parametrized by the parameter $\bm\theta$ that specifies the
+    preprocessing.
+
   \item[\abbr{VGG}256]
     Given a single cropped-out projection screen and a set of lecture slide
     pages, the lecture slide pages are ranked according to the cosine
@@ -712,12 +726,12 @@ used to solve task 1. I will now describe the models for solving task 1a.
     projection screen and the \abbr{VGG} feature vector of a lecture slide page
     in descending order.
     
-    The model is implemented in the
-    \texttt{models.task1.subtaska.vgg256} \term{module}. It is parametrized by
+    The model is defined in the
+    \texttt{models.task1.subtaska.vgg256} module. It is parametrized by
     the neural network that produces the \abbr{VGG} feature vectors and by a
     boolean parameter that controls whether or not the model is
     \term{handicapped}, i.e.\ whether the \abbr{VGG} feature vector of the
-    video frame is used rather than the \abbr{VGG} feature vector of the
+    entire video frame is used rather than the \abbr{VGG} feature vector of the
     cropped-out projection screen.
 
   \item[Histograms]
@@ -727,23 +741,24 @@ used to solve task 1. I will now describe the models for solving task 1a.
     histogram of a lecture slide page in descending or ascending order,
     respectively.
 
-    The model is implemented in the
+    The model is defined in the
     \texttt{models.task1.subtaska.histograms} module. It is parametrized by
     the type of histogram that is used (foreground row heights, foreground row
-    altitudes, relative luminance, or full feature vectors), and the similarity
+    altitudes, relative luminance, or full feature vectors), by the similarity
     (Pearson's $r$, Jaccard index, or cosine similarity) or distance measure
     (Bhattacharyya distance~\cite{bhattacharyya1943measure}, Kullback--Leibler
     divergence~\cite{kullback1951information}, or the $\chi^2$ test statistic)
-    used to compare two histograms.
+    used to compare two histograms, and by the parameter $\bm\theta$ that
+    specifies the preprocessing.
 
-  \item[Classifiers]
+  \item[First-tier classifiers]
     Given a single cropped-out projection screen and a set of lecture slide
     pages, the lecture slide pages are ranked in an ascending order by the
     signed distance from a decision hyperplane or by the posterior probability
     estimate of a classifier, where the observation is the pairwise feature
-    vector between the cropped-out projection screen and a lecture slide page.
+    vector between the projection screen and a lecture slide page.
 
-    The model is implemented in the \texttt{models.task1.subtaska.classifiers}
+    The model is defined in the \texttt{models.task1.subtaska.classifiers}
     module. It is parametrized by the classifier that is used (logistic
     regression, \abbr{SVM}, real AdaBoost~\cite{friedman2000additive}, or a
     random decision forest).
@@ -756,17 +771,17 @@ used to solve task 1. I will now describe the models for solving task 1a.
     whether the pairwise feature vector corresponds to a matching screen and
     page.
     
-    I use the $\chi^2$ test to preselect 100 features with the highest
+    I use the $\chi^2$ test to \term{preselect} 100 features with the highest
     dependence between the observation class and the feature value. The
-    remaining features are standardized by removing the mean and scaling to
-    unit variance. Next, I use the classifier to perform \term{recursive
+    remaining features are \term{standardized} by removing the mean and scaling
+    to unit variance. Next, I use the classifier to perform \term{recursive
     feature elimination} with a step size of 1. After each step, a 3-fold
-    \term{cross-validation} (\abbr{CV}) with the \abbr{AUROC} measure is
-    performed on the training observations to evaluate whether the optimal
-    number of features has been reached. Due to time constraints, the recursive
-    feature elimination is not performed with the \abbr{SVM} classifier.
-    Finally, a 3-fold \abbr{CV} with the \abbr{AUROC} measure is used in
-    a grid search for the optimal classifier parameters from the following:
+    \term{cross-validation} with the \abbr{AUROC} measure is performed on the
+    training observations to evaluate whether the optimal number of features
+    has been reached. Due to time constraints, the recursive feature
+    elimination is not performed with the \abbr{SVM} classifier.  Finally, a
+    3-fold cross-validation with the \abbr{AUROC} measure is used in a grid
+    search for the optimal classifier parameters from the following:
     \begin{description}
       \item[\abbr{SVM}]
         For the \abbr{SVM} classifier, either the linear or the \term{radial
@@ -789,7 +804,46 @@ used to solve task 1. I will now describe the models for solving task 1a.
     the training observations.
 \end{description}
 
+I will now describe the model for solving task 1b.
+\begin{description}
+  \item[Second-tier classifiers]
+    Given an input that consists of a single cropped-out projection screen and
+    a set of lecture slide pages, a \term{random vector of scores} is produced
+    by passing the input to task 1a models. Based on this random vector, a
+    classifier decides whether the projection screen matches any lecture slide
+    page in the set.
+    
+    The model is defined in the \texttt{models.task1.subtaskb.classifiers}
+    module. It is parametrized by the classifier that is used (logistic
+    regression, \abbr{SVM}, real AdaBoost~\cite{friedman2000additive}, or a
+    random decision forest), and by a boolean parameter that controls whether
+    \abbr{VGG} is included among the task 1a models, or whether only the row
+    numbers and histograms are used.
+
+    Given a set of training recordings, a set of training observations is
+    produced from all random vectors between a projection screen and the
+    lecture slide pages from a single recording. Each training observation is
+    assigned a \term{class} based on whether the projection screen matches any
+    lecture slide page and whether the projection screen and the lecture slide
+    pages correspond to the same recording.
+
+    Since there are 80 possible values of the parameter for row numbers, 4
+    possible values of the parameters for \abbr{VGG}, and 1452 possible values
+    of the parameters for histograms, the random vector contains either 1532 or
+    1536 features. Since the number of features is small, no feature
+    preselection is performed. The rest of the training is identical to the
+    first-tier classifiers.
+
 \section{Experimental setup}
+\label{sec:experimental-setup}
+In this section, I will describe the procedure and the measures that were used
+to evaluate the system described in Section~\ref{sec:system-description}.
+
+\iffalse
+- Define a match.
+- Define cross-validation.
+\fi
+
 \section{Results}
 \section{Conclusion and future work}
 \iffalse
@@ -797,6 +851,7 @@ used to solve task 1. I will now describe the models for solving task 1a.
 - Not all sources of noise were tackled.
 - The processing pipeline has not been tackled at all.
 - Pairwise histograms are ad-hoc.
+- Jupyter notebook todos.
 \fi
 
 \section*{Acknowledgement}
