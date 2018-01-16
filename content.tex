@@ -268,8 +268,8 @@ A frame element corresponds to a single frame of a recording and contains the
 following attributes:
 \begin{description}
   \item[number] the frame number in the video file,
-  \item[vgg256] two feature vectors obtained by feeding the entire
-    frame into two 256dimensional \term{\abbr{VGG} convolutional neural
+  \item[vgg256] two \term{\abbr{vgg} feature vectors} obtained by feeding the
+    entire frame into two 256dimensional \term{\abbr{VGG} convolutional neural
     networks}~\cite{simonyan2014very} -- the first trained on the ImageNet%
     \note{See \href{http://www.image-net.org/}{image-net.org}.} image
     classification dataset and the second trained on the ImageNet and
@@ -296,9 +296,9 @@ frame of a recording and contains the following attributes:
         projection screen partially obscures the lecture slide, and
       \item[pristine] none of the above, and
     \end{description}
-  \item[vgg256] two feature vectors obtained by feeding the cropped-out
-    projection screen frame into the neural networks described in the frame
-    element.
+  \item[vgg256] two \abbr{VGG} feature vectors obtained by feeding the
+    cropped-out projection screen frame into the neural networks described in
+    the frame element.
 \end{description}
 Beside the attributes, a screen element is in a relation to pages of lecture
 slides that is represented by a sequence of keyref elements.
@@ -337,8 +337,8 @@ the following attribute:
   \item[key] a identifier of the page that is unique in the current video element,
   \item[filename] the filename of the image file containing the page,
   \item[number] the number of the page in the \abbr{PDF} document,
-  \item[vgg256] two feature vectors obtained by feeding the page into the
-    neural networks described in the frame element.
+  \item[vgg256] two \abbr{VGG} feature vectors obtained by feeding the page
+    into the neural networks described in the frame element.
 \end{description}
 
 The dataset is distributed along with a Python interface implemented in files
@@ -622,7 +622,7 @@ individual steps in order of execution. Examples are shown in figures~%
     touching the image boundary.
 \end{description}
 
-\subsection{Extracting features}
+\subsection{Feature extraction}
 After an image has been preprocessed, descriptors are extracted from the
 relative luminance $Y$ and the foreground $F$. I will now describe the
 individual \term{features} recognized by the system.
@@ -668,14 +668,14 @@ individual \term{features} recognized by the system.
     {\setlength{\fboxrule}{0pt}%
      \showthreeimages{fig/preprocessing}%
        {histogram-1_0}{histogram-1_1}{histogram-1_2}%
-       {The histogram of $F_1\cdot Y_1$}%
-       {The histogram of $F_2\cdot Y_2$}%
-       {The histogram of $F_3\cdot Y_3$}}
-    \caption{Grayscale histograms of images $I_1,I_2$, and $I_3$ computed from
+       {The histogram of $\delta_{{}-{}}(F_1)\cdot Y_1$}%
+       {The histogram of $\delta_{{}-{}}(F_2)\cdot Y_2$}%
+       {The histogram of $\delta_{{}-{}}(F_3)\cdot Y_3$}}
+    \caption{Relative luminance histograms of images $I_1,I_2$, and $I_3$ computed from
       the foreground row pixels.}
-    \label{fig:system-features-grayscale-histogram}
+    \label{fig:system-features-relative-luminance}
   \end{figure}
-  \item[Grayscale histogram]
+  \item[Relative luminance]
     A histogram is extracted from $Y$ with 16 equal-width bins. Optionally, the
     histogram can be extracted only from foreground row pixels and each pixel
     can be assigned a weight according to its variance across all lecture slide
@@ -685,8 +685,8 @@ individual \term{features} recognized by the system.
 \end{description}
 
 The \texttt{preprocessing.Features.get\_features} method takes the above
-features to produce a single vector of 101 features. Optionally, the feature
-vectors produced by feeding $I$ into two 256dimensional \abbr{VGG}
+features to produce a single vector of 101 features. Optionally, the \abbr{VGG}
+feature vectors produced by feeding $I$ into two 256dimensional \abbr{VGG}
 convolutional neural networks are also considered, leading to 613 features.
 
 The \texttt{preprocessing.Features.get\_full\_features} method takes all
@@ -701,6 +701,93 @@ computes the difference between their full feature vectors to obtain a
 \term{pairwise vector}.
 
 \subsection{Models}
+Using the extracted features, several pattern recognition \term{models} are
+used to solve task 1. I will now describe the models for solving task 1a.
+
+\begin{description}
+  \item[\abbr{VGG}256]
+    Given a single cropped-out projection screen and a set of lecture slide
+    pages, the lecture slide pages are ranked according to the cosine
+    similarity between the \abbr{VGG} feature vector of the cropped-out
+    projection screen and the \abbr{VGG} feature vector of a lecture slide page
+    in descending order.
+    
+    The model is implemented in the
+    \texttt{models.task1.subtaska.vgg256} \term{module}. It is parametrized by
+    the neural network that produces the \abbr{VGG} feature vectors and by a
+    boolean parameter that controls whether or not the model is
+    \term{handicapped}, i.e.\ whether the \abbr{VGG} feature vector of the
+    video frame is used rather than the \abbr{VGG} feature vector of the
+    cropped-out projection screen.
+
+  \item[Histograms]
+    Given a single cropped-out projection screen and a set of lecture slide
+    pages, the lecture slide pages are ranked by a similarity or distance
+    measure between a histogram of the cropped-out projection screen and a
+    histogram of a lecture slide page in descending or ascending order,
+    respectively.
+
+    The model is implemented in the
+    \texttt{models.task1.subtaska.histograms} module. It is parametrized by
+    the type of histogram that is used (foreground row heights, foreground row
+    altitudes, relative luminance, or full feature vectors), and the similarity
+    (Pearson's $r$, Jaccard index, or cosine similarity) or distance measure
+    (Bhattacharyya distance~\cite{bhattacharyya1943measure}, Kullback--Leibler
+    divergence~\cite{kullback1951information}, or the $\chi^2$ test statistic)
+    used to compare two histograms.
+
+  \item[Classifiers]
+    Given a single cropped-out projection screen and a set of lecture slide
+    pages, the lecture slide pages are ranked in an ascending order by the
+    signed distance from a decision hyperplane or by the posterior probability
+    estimate of a classifier, where the observation is the pairwise feature
+    vector between the cropped-out projection screen and a lecture slide page.
+
+    The model is implemented in the \texttt{models.task1.subtaska.classifiers}
+    module. It is parametrized by the classifier that is used (logistic
+    regression, \abbr{SVM}, real AdaBoost~\cite{friedman2000additive}, or a
+    random decision forest).
+
+    Unlike the above models, this model is \term{supervised}. Given a set of
+    training recordings, a set of training observations is produced from all
+    pairwise vectors between a projection screen and a lecture slide page,
+    where both the screen and the page are associated with the same training
+    recording. Each training observation is assigned a \term{class} based on
+    whether the pairwise feature vector corresponds to a matching screen and
+    page.
+    
+    I use the $\chi^2$ test to preselect 100 features with the highest
+    dependence between the observation class and the feature value. The
+    remaining features are standardized by removing the mean and scaling to
+    unit variance. Next, I use the classifier to perform \term{recursive
+    feature elimination} with a step size of 1. After each step, a 3-fold
+    \term{cross-validation} (\abbr{CV}) with the \abbr{AUROC} measure is
+    performed on the training observations to evaluate whether the optimal
+    number of features has been reached. Due to time constraints, the recursive
+    feature elimination is not performed with the \abbr{SVM} classifier.
+    Finally, a 3-fold \abbr{CV} with the \abbr{AUROC} measure is used in
+    a grid search for the optimal classifier parameters from the following:
+    \begin{description}
+      \item[\abbr{SVM}]
+        For the \abbr{SVM} classifier, either the linear or the \term{radial
+        basis} \term{Mercer kernel function} is used. For the classifier
+        parameters $C$ and $\gamma$, I test the values $C\in\{2^{2(i-2)-1}\mid
+        i=0,1,\ldots,10\}, \gamma\in\{2^{2(i-7)-1}\mid i=0,1,\ldots,10\}$.
+      \item[Real AdaBoost]
+        For the real AdaBoost classifier, I test the parameter values
+        $n\in\{2^{i+2}\mid i=0,1,\ldots,7\}$, where $n$ is the max.\ number
+        of estimators.
+      \item[Random Forest]
+        For the random forest classifier, I test the parameter values
+        $n\in\{2^{i+2}\mid i=0,1,\ldots,7\}$ and
+        $k\in\{2^i\mid i=0,1,\ldots,7\}\cup\{\text{None}\}$,
+        where $n$ is the number of trees in the forest and $k$ is the maximum
+        depth of a tree.
+    \end{description}
+    No grid search is performed with the non-parametric logistic regression
+    classifier. The classifier with the optimal parameters is then trained on
+    the training observations.
+\end{description}
 
 \section{Experimental setup}
 \section{Results}
