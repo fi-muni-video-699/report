@@ -51,8 +51,9 @@ measures. In Section~\ref{sec:dataset}, I will describe the dataset
 that I built for the \term{training}, \term{model selection}, and
 \term{performance estimation} of systems solving the tasks. In
 Section~\ref{sec:system-description}, I will describe a baseline system that
-solves task 1. In Section~\ref{sec:experimental-setup}, I will evaluate the
-baseline system.
+solves task 1. In Section~\ref{sec:experimental-setup}, I will describe
+the evaluation of the baseline system. In Section~\ref{sec:results},
+I will give the evaluation results.
 
 % TODO: \ldots
 
@@ -313,15 +314,21 @@ attribute:
   \item[similarity] the type of relation between this lit projection screen and
     a lecture slide page:
     \begin{description}
-      \item[full] the projection screen shows the lecture slide page, and
+      \item[full] the projection screen $s$ shows the lecture slide page $p$
+        ($s\sim p$), and
       \item[incremental] a single \term{logical} lecture slide page is split
         across several lecture slide pages and incrementally uncovered; the
-        projection screen and the lecture slide page correspond to the same
-        logical page.
+        projection screen $s$ and the lecture slide page $p$ correspond to the
+        same logical page ($s\mathop{\hat\sim}p$).
     \end{description}
 \end{description}
 Beside the attribute, a keyref element contains a reference to a lecture slide
 page represented the unique identifier of a page element.
+
+During the task description in Section~\ref{sec:tasks}, I talked somewhat
+vaguely about a projection screen „matching“ a lecture slide page. To give a
+precise definition, a lit projection screen $s$ matches a lecture slide page $p$ if
+and only if \[s\sim p\lor\big(\nexists p'(s\sim p')\land s\mathop{\hat\sim}p\big).\]
 
 \subsubsection*{The document element}
 A document element corresponds to a single set of lecture slides and contains
@@ -498,9 +505,10 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
 \section{System description}
 \label{sec:system-description}
 To provide a baseline for future systems and a reference for using the Python
-interface for the dataset, I implemented a system that solves task 1. In this
-section, I will give a description of its structure and the used techniques.
-An implementation of the system has been published in a Git repository at
+interface for the dataset, I implemented a baseline system that solves task 1.
+In this section, I will give a description of its structure and the used
+techniques.  An implementation of the system has been published in a Git
+repository at
 \href{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-experiments}%
      {gitlab.fi.muni.cz/xnovot32/fi-muni-video-experiments}.
 % TODO: Document the license, make the repository public (move to GitHub perhaps)?
@@ -820,12 +828,12 @@ I will now describe the model for solving task 1b.
     \abbr{VGG} is included among the task 1a models, or whether only the row
     numbers and histograms are used.
 
-    Given a set of training recordings, a set of training observations is
-    produced from all random vectors between a projection screen and the
-    lecture slide pages from a single recording. Each training observation is
-    assigned a \term{class} based on whether the projection screen matches any
-    lecture slide page and whether the projection screen and the lecture slide
-    pages correspond to the same recording.
+    The model is supervised. Given a set of training recordings, a set of
+    training observations is produced from all random vectors between a
+    projection screen and the lecture slide pages from a single recording. Each
+    training observation is assigned a \term{class} based on whether the
+    projection screen matches any lecture slide page and whether the projection
+    screen and the lecture slide pages correspond to the same recording.
 
     Since there are 80 possible values of the parameter for row numbers, 4
     possible values of the parameters for \abbr{VGG}, and 1452 possible values
@@ -833,11 +841,40 @@ I will now describe the model for solving task 1b.
     1536 features. Since the number of features is small, no feature
     preselection is performed. The rest of the training is identical to the
     first-tier classifiers.
+\end{description}
 
 \section{Experimental setup}
 \label{sec:experimental-setup}
 In this section, I will describe the procedure and the measures that were used
-to evaluate the system described in Section~\ref{sec:system-description}.
+to evaluate the baseline system described in Section~\ref{sec:system-description}.
+The evaluation is implemented in the \texttt{evaluation} module.
+
+The dataset consists of 17 videos.
+Since some models are supervised, it is necessary to split the dataset into
+\term{training}, \term{validation}, and \term{test} datasets. The training
+dataset is used to train the models, the validation dataset is to select the
+best-performing model, and the test dataset is used to estimate the performance
+of the selected model.
+    
+Rather than actually split the dataset, I use two nested cross-validations; the
+inner 16-fold cross-validation performs the model selection, whereas the outer
+17-fold cross-validation estimates the performance. This approach has the
+advantage of placing \term{confidence intervals} on the evaluation measures and the
+disadvantage of increasing the time complexity of the evaluation by a
+multiplicative factor that is quadratic in the number of cross-validation
+folds. Due to time constraints, only a single step of the outer
+cross-validation was performed, i.e. no confidence intervals are given for the
+performance estimates.
+
+For the task 1a models, I compute the empirical expected value of the rank of a
+matching page. I also compute an empirical 95\% two-sided confidence interval
+by taking the percentiles from the ranks observed at the individual
+cross-validation folds.
+
+For the task 1b models, I compute the empirical expected value of the
+misclassification loss. I also estimate the 95\% two-sided confidence interval
+by making a normality assumption about the binomial misclassification loss
+and by taking the percentiles of the normal distribution.
 
 \iffalse
 - Define a match.
@@ -845,6 +882,8 @@ to evaluate the system described in Section~\ref{sec:system-description}.
 \fi
 
 \section{Results}
+\label{sec:results}
+
 \section{Conclusion and future work}
 \iffalse
 - Polarity flipping is applied before the removal of the uneven illumination.
