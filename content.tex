@@ -135,7 +135,7 @@ will need to solve the following tasks listed in bottom-up order:
   \item selecting important frames and the order in which frames are resolved.
 \end{enumerate}
 I will now describe the individual tasks in detail along with the proposed
-evaluation method.
+evaluation method:
 
 \paragraph{Task 1a} Given a single cropped-out projection screen and a set of
 lecture slide pages, the task is to retrieve the page in the set that is most
@@ -146,11 +146,11 @@ translation~\cite{sarvaiyaetal09} coupled with scaling may be necessary to
 Section~\ref{sec:noise}.
 
 I will frame this task as an \term{information retrieval} (\abbr{IR}) problem,
-i.e.\ we will be looking for an \abbr{IR} system that ranks pages by their
-similarity to a screen so that if there exists a matching page, it will be
-placed first. To compare two systems, we can estimate the expected value of the
-\term{rank} of a matching page produced by each system across one or several
-test datasets.
+i.e.\ I will be looking for an \abbr{IR} system that ranks pages by their
+similarity to a screen, so that maching pages receive the highest \term{rank}.
+To compare two systems, we can estimate the expected value of the highest
+rank of a matching page produced by each system on one or several test
+datasets.
 
 \paragraph{Task 1b} Given a single cropped-out projection screen and a set of
 lecture slide pages, the task is to decide whether or not the screen matches
@@ -232,7 +232,7 @@ The dataset is represented by an \abbr{XML} document \texttt{dataset.xml} in
 the language \texttt{schema.xsd} shown in Figure~\ref{fig:schema}. The root
 element of \texttt{dataset.xml} consists of a sequence of recordings
 represented by video elements. I will now describe the individual elements of
-the language.
+the language:
 
 \begin{figure}
   \leavevmode\kern-0.13\textwidth
@@ -638,9 +638,9 @@ individual steps in order of execution. Examples are shown in figures~%
 
 \subsection{Feature extraction}
 \label{sec:features}
-After an image has been preprocessed, descriptors are extracted from the
+After processing an image, descriptors are extracted from the
 relative luminance $Y$ and the foreground $F$. I will now describe the
-individual \term{features} recognized by the system.
+\term{features} recognized by the~system:
 
 \begin{description}
   \item[Haralick features]
@@ -717,11 +717,17 @@ computes the difference between their full feature vectors to obtain a
 
 \subsection{Models}
 Using the extracted features, several pattern recognition \term{models} are
-used to solve task 1. I will now describe the models for solving task 1a.
+used to solve task 1. I will now describe the models for solving task 1a:
 
 \begin{description}
+  \item[Dummy models]
+    Given a cropped-out projection screen and a set of lecture slide pages, the
+    lecture slide pages are ranked either randomly (random), or so that the
+    lecture slide pages matching the projection screen receive the highest
+    (best) or the lowest (worst) rank. Dummy models are a baseline.
+
   \item[Row numbers]
-    Given a single cropped-out projection screen and a set of lecture slide
+    Given a cropped-out projection screen and a set of lecture slide
     pages, the lecture slide pages are ranked according to the absolute value of
     the difference between the number of foreground rows in the projection
     screen and in a lecture slide page in ascending order.
@@ -731,8 +737,8 @@ used to solve task 1. I will now describe the models for solving task 1a.
     It is parametrized by the parameter $\bm\theta$ that specifies the
     preprocessing.
 
-  \item[\abbr{VGG}256]
-    Given a single cropped-out projection screen and a set of lecture slide
+  \item[\abbr{VGG}]
+    Given a cropped-out projection screen and a set of lecture slide
     pages, the lecture slide pages are ranked according to the cosine
     similarity between the \abbr{VGG} feature vector of the cropped-out
     projection screen and the \abbr{VGG} feature vector of a lecture slide page
@@ -743,11 +749,11 @@ used to solve task 1. I will now describe the models for solving task 1a.
     the neural network that produces the \abbr{VGG} feature vectors and by a
     boolean parameter that controls whether or not the model is
     \term{handicapped}, i.e.\ whether the \abbr{VGG} feature vector of the
-    entire video frame is used rather than the \abbr{VGG} feature vector of the
+    entire frame is used rather than the \abbr{VGG} feature vector of the
     cropped-out projection screen.
 
   \item[Histograms]
-    Given a single cropped-out projection screen and a set of lecture slide
+    Given a cropped-out projection screen and a set of lecture slide
     pages, the lecture slide pages are ranked by a similarity or distance
     measure between a histogram of the cropped-out projection screen and a
     histogram of a lecture slide page in descending or ascending order,
@@ -764,7 +770,7 @@ used to solve task 1. I will now describe the models for solving task 1a.
     specifies the preprocessing.
 
   \item[First-tier classifiers]
-    Given a single cropped-out projection screen and a set of lecture slide
+    Given a cropped-out projection screen and a set of lecture slide
     pages, the lecture slide pages are ranked in an ascending order by the
     signed distance from a decision hyperplane or by the posterior probability
     estimate of a classifier, where the observation is the pairwise feature
@@ -773,7 +779,8 @@ used to solve task 1. I will now describe the models for solving task 1a.
     The model is defined in the \texttt{models.task1.subtaska.classifiers}
     module. It is parametrized by the classifier that is used (logistic
     regression, \abbr{SVM}, real AdaBoost~\cite{friedman2000additive}, or a
-    random decision forest).
+    random decision forest), and by a boolean parameter that controls whether
+    \abbr{VGG} feature vectors are included in the pairwise feature vectors.
 
     Unlike the above models, this model is \term{supervised}. Given a set of
     training recordings, a set of training observations is produced from all
@@ -815,11 +822,22 @@ used to solve task 1. I will now describe the models for solving task 1a.
     classifier. The classifier with the optimal parameters is then trained on
     the training observations.
 \end{description}
+There exist 3 dummy models, 80 possible values of the parameter for row numbers,
+4 possible values of the parameters for \abbr{VGG}, 1452 possible values of the
+parameters for histograms, and 8 possible values of the parameters for
+first-tier classifiers. This amounts to 1547 parametrized task 1a models in
+total.
 
-I will now describe the model for solving task 1b.
+I will now describe the models for solving task 1b:
 \begin{description}
+  \item[Dummy models]
+    Given a cropped-out projection screen and a set of lecture slide pages, a
+    random boolean variable (random), the value of true (conservative), or
+    whether the projection screen matches (best) or does not match (worst) any
+    lecture slide page in the set, is returned. Dummy models are a baseline.
+
   \item[Second-tier classifiers]
-    Given an input that consists of a single cropped-out projection screen and
+    Given an input that consists of a cropped-out projection screen and
     a set of lecture slide pages, a \term{random vector of scores} is produced
     by passing the input to task 1a models. Based on this random vector, a
     classifier decides whether the projection screen matches any lecture slide
@@ -829,7 +847,7 @@ I will now describe the model for solving task 1b.
     module. It is parametrized by the classifier that is used (logistic
     regression, \abbr{SVM}, real AdaBoost~\cite{friedman2000additive}, or a
     random decision forest), and by a boolean parameter that controls whether
-    \abbr{VGG} is included among the task 1a models, or whether only the row
+    \abbr{VGG} is included in the task 1a models, or whether only the row
     numbers and histograms are used.
 
     The model is supervised. Given a set of training recordings, a set of
@@ -839,13 +857,14 @@ I will now describe the model for solving task 1b.
     projection screen matches any lecture slide page and whether the projection
     screen and the lecture slide pages correspond to the same recording.
 
-    Since there are 80 possible values of the parameter for row numbers, 4
-    possible values of the parameters for \abbr{VGG}, and 1452 possible values
-    of the parameters for histograms, the random vector contains either 1532 or
-    1536 features. Since the number of features is small, no feature
-    preselection is performed. The rest of the training is identical to the
-    first-tier classifiers.
+    The random vector contains either 1532 or 1536 features depending on
+    whether \abbr{VGG} is included in the task 1a models. Since the number of
+    features is small, no feature preselection is performed. The rest of the
+    training is identical to the first-tier classifiers.
 \end{description}
+There exist 3 dummy models, and 8 possible values of the parameter for
+second-tier classifiers. This amounts to 11 parametrized task 1b models in
+total.
 
 \section{Experimental setup}
 \label{sec:experimental-setup}
@@ -853,7 +872,7 @@ In this section, I will describe the procedure and the measures that were used
 to evaluate the baseline system described in Section~\ref{sec:system-description}.
 The evaluation is implemented in the \texttt{evaluation} module.
 
-The dataset consists of 17 videos.
+The dataset consists of 17 recordings.
 Since some models are supervised, it is necessary to split the dataset into
 \term{training}, \term{validation}, and \term{test} datasets. The training
 dataset is used to train the models, the validation dataset is used to select
@@ -867,19 +886,193 @@ advantage of decreasing the variance of the evaluation measure estimate,
 and the disadvantage of increasing the time complexity of the evaluation by a
 multiplicative factor that is quadratic in the number of cross-validation
 folds. Due to time constraints, only a single step of the outer
-cross-validation was performed, i.e. only wide confidence intervals are
-given for the performance estimates.
+cross-validation was performed, i.e. only wide confidence intervals
+are given for the performance estimates.
 
-For the task 1a models, I compute the empirical expected value of the rank of a
-matching page. I also compute an empirical 95\% two-sided confidence interval
-by taking the sample quantiles of the observed ranks.
-For the task 1b models, I compute the empirical expected value of the
+At each step of the inner cross-validation, a validated task 1 model is passed
+all cropped-out projection screens associated with the 15 validation
+recordings. Each projection screen is accompanied with all lecture slide pages
+from the same validation recording. Among other things, this means that a task
+1b model is never validated on a cropped-out projection screen and a set of
+lecture slide pages, each associated with a different recording; only the
+ability of to detect cropped-out screens with no matching lecture slide pages
+is tested.
+
+For a task 1a model, I compute the empirical expected value of the highest rank
+of a matching page. I also compute an empirical 95\% two-sided confidence
+interval (\abbr{CI}) by taking the sample quantiles of the observed ranks. For
+a task 1b model, I compute the empirical expected value of the
 misclassification loss. I also estimate the 95\% two-sided confidence interval,
 this time by making a normality assumption about the binomial misclassification
 loss.
 
 \section{Results}
 \label{sec:results}
+
+\begin{table}
+\leavevmode\kern-.13\textwidth
+\begin{tabular}{l>{\footnotesize}ll}
+  Task 1a model & \normalsize Parameters & Highest rank (95\% \abbr{CI}) \\ \toprule
+
+  \textit{Dummy (best)}
+    &
+    & $\phantom{0}0.00$ ($0.00$--$0.00$) \\
+
+  Histograms
+    & foreground row altitudes, Jaccard index, $\theta_1=\text{False},\theta_2=3,\theta_3=(\text{False}, \text{False})$
+    & $\phantom{0}7.81$ ($0.00$--$43.00$) \\
+
+  \abbr{VGG}
+    & ImageNet and Places2, not handicapped
+    & $11.55$ ($0.00$--$57.53$) \\
+
+  Row numbers
+    & $\theta_1=\text{False},\theta_2=9,\theta_3=(\text{False}, \text{False})$
+    & $11.83$ ($0.00$--$65.00$) \\
+
+  First-tier classifiers
+    & random decision forest, without \abbr{VGG} feature vectors
+    & $17.13$ ($0.00$--$75.00$) \\
+
+  \textit{Dummy (random)}
+    &
+    & $28.15$ ($1.00$--$88.05$) \\
+
+  \textit{Dummy (worst)}
+    &
+    & $57.03$ ($24.00$--$110.00$) \\
+\end{tabular}
+\caption{Inner cross-validation (model selection) results for task 1a. Due to
+  the high number of task 1a parametrized models (1547), only the
+  highest-ranking parameter values are shown for each model.}
+\label{tab:model-selection-task1a}
+\end{table}
+
+\begin{table}
+\leavevmode\kern-.13\textwidth
+\begin{tabular}{l@{\hspace*{2.1em}}>{\footnotesize}ll}
+  Task 1a model & \normalsize Parameters & Highest rank (95\% \abbr{CI}) \\ \toprule
+
+  \textit{Dummy (best)}
+    &
+    & \\
+
+  Histograms
+    & foreground row altitudes, Jaccard index, $\theta_1=\text{False},\theta_2=3,\theta_3=(\text{False}, \text{False})$
+    & $\phantom{0}8.62$ ($0.00$--$37.10$) \\
+
+  \textit{Dummy (random)}
+    &
+    & \\
+
+  \textit{Dummy (worst)}
+    &
+    & \\
+\end{tabular}
+\caption{Outer cross-validation (performance estimation) results for task 1a.}
+\label{tab:performance-estimation-task1a}
+\end{table}
+
+\begin{table}
+\leavevmode\kern-.075\textwidth
+\begin{tabular}{l>{\footnotesize}ll}
+  Task 1b model & \normalsize Parameters & Misclassification loss (95\% \abbr{CI}) \\ \toprule
+
+  \textit{Dummy (best)}
+    &
+    & $0.0000$ ($0.0000$--$0.0000$) \\
+
+  \textit{Dummy (conservative)}
+    &
+    & $0.1469$ ($0.1193$--$0.1745$) \\
+
+  Second-tier classifiers
+    & logistic regression, without \abbr{VGG} feature vectors
+    & $0.3649$ ($0.3274$--$0.4024$) \\
+
+  \textit{Dummy (random)}
+    &
+    & $0.5008$ ($0.4618$--$0.5397$) \\
+
+  Second-tier classifiers
+    & logistic regression, with \abbr{VGG} feature vectors
+    & $0.5071$ ($0.4682$--$0.5461$) \\
+
+  Second-tier classifiers
+    & real AdaBoost, with \abbr{VGG} feature vectors
+    & $0.6288$ ($0.5911$--$0.6664$) \\
+
+  Second-tier classifiers
+    & real AdaBoost, without \abbr{VGG} feature vectors
+    & $0.6840$ ($0.6478$--$0.7203$) \\
+
+  Second-tier classifiers
+    & random decision forest, without \abbr{VGG} feature vectors
+    & $0.7283$ ($0.6936$--$0.7629$) \\
+
+  Second-tier classifiers
+    & \abbr{SVM}, without \abbr{VGG} feature vectors
+    & $0.8073$ ($0.7765$--$0.8380$) \\
+
+  Second-tier classifiers
+    & \abbr{SVM}, with \abbr{VGG} feature vectors
+    & $0.8183$ ($0.7883$--$0.8484$) \\
+
+  Second-tier classifiers
+    & random decision forest, with \abbr{VGG} feature vectors
+    & $0.8515$ ($0.8238$--$0.8792$) \\
+
+  \textit{Dummy (worst)}
+    &
+    & $1.0000$ ($1.0000$--$1.0000$) \\
+\end{tabular}
+\caption{Inner cross-validation (model selection) results for task 1b. Results
+  for all 11 parametrized task 1b models are shown.}
+\label{tab:model-selection-task1b}
+\end{table}
+
+\begin{table}
+\leavevmode\kern-.075\textwidth
+\begin{tabular}{l>{\footnotesize}l@{\hspace*{2.95em}}l}
+  Task 1b model & \normalsize Parameters & Misclassification loss (95\% \abbr{CI}) \\ \toprule
+
+  \textit{Dummy (best)}
+    &
+    & \\
+
+  \textit{Dummy (conservative)}
+    &
+    & \\
+
+  Second-tier classifiers
+    & logistic regression, without \abbr{VGG} feature vectors
+    & \\
+
+  \textit{Dummy (random)}
+    &
+    & \\
+
+  \textit{Dummy (worst)}
+    &
+    & \\
+\end{tabular}
+\caption{Outer cross-validation (performance estimation) results for task 1b.}
+\label{tab:performance-estimation-task1b}
+\end{table}
+
+\iffalse
+Model selection, task 1a
+- CIs are wide to the point of being useless,
+- according the the expected value, all models are better than random,
+- $\theta_1$ (flipping) and $\theta_3$ (relative luminance histogram weights) underperform
+- despite a lack of parameters, \abbr{VGG} yields high results
+- none of the models is provably better than random
+
+Model selection, task 1b
+- due to the normal approximation, CIs are much more narrow
+- at least one of the models is provably better than random
+- none of the models is provably better than conservative
+\fi
 
 \section{Conclusion}
 \label{sec:conclusion}
