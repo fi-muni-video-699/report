@@ -34,7 +34,7 @@ the course materials in the form of structured \abbr{PDF} documents. One way to
 add structured information to the recordings is then to find a mapping between the
 temporal dimension of a recording and the pages of the corresponding lecture
 slides. This gives us the digital form of the text that is being shown on any
-given \term{frame} of the recordings, which can be immediately used to
+given \term{frame} of the video files, which can be immediately used to
 \begin{enumerate}
 \item retrieve portions of recordings relevant to the user's information need
   expressed in the form of a text query and
@@ -54,7 +54,8 @@ Section~\ref{sec:system-description}, I will describe a baseline system that
 solves task 1. In Section~\ref{sec:experimental-setup}, I will describe
 the evaluation of the baseline system. In Section~\ref{sec:results},
 I will give the evaluation results. In Section~\ref{sec:conclusion}, I will
-state my conclusion and outline venues for future work.
+state my conclusion. In Section~\ref{sec:future-work}, I will outline venues
+for future work.
 
 \section{Problem statement}
 \label{sec:problem}
@@ -129,8 +130,8 @@ will need to solve the following tasks listed in bottom-up order:
       \item mapping a cropped-out projection screen to a lecture slide page, and
       \item deciding if a projection screen matches any lecture slide page,
     \end{enumerate}
-  \item detecting and cropping out all projection screens in a single frame
-    of a recording, and
+  \item detecting and cropping out all projection screens in a single video
+    file frame, and
   \item selecting important frames and the order in which frames are resolved.
 \end{enumerate}
 I will now describe the individual tasks in detail along with the proposed
@@ -141,13 +142,13 @@ lecture slide pages, the task is to retrieve the page in the set that is most
 similar to the screen. Since a screen and the matching page may not be
 perfectly aligned, rotation~\cite{smith1995simple}, and
 translation~\cite{sarvaiyaetal09} coupled with scaling may be necessary to
-\term{register} each screen-page tuple before the removal of the noise
-described in Section~\ref{sec:noise}.
+\term{register} the screen with a page before tackling the noise described in
+Section~\ref{sec:noise}.
 
 I will frame this task as an \term{information retrieval} (\abbr{IR}) problem,
 i.e.\ we will be looking for an \abbr{IR} system that ranks pages by their
-similarity to a screen and, if there exists a matching page, it will be placed
-first. To compare two systems, we can estimate the expected value of the
+similarity to a screen so that if there exists a matching page, it will be
+placed first. To compare two systems, we can estimate the expected value of the
 \term{rank} of a matching page produced by each system across one or several
 test datasets.
 
@@ -174,7 +175,7 @@ Informally speaking, both binomial deviance and log-likelihood favor
 classifiers that are hesitant about their wrong decisions and confident about
 their correct decisions.
 
-\paragraph{Task 2} Given a single recording frame, the task is to detect the
+\paragraph{Task 2} Given a single video file frame, the task is to detect the
 boundaries of all lit projection screens. To compare two systems, we can
 estimate the expected value of the \term{Jaccard index} between each system and
 one or several test datasets using polygonal union and intersection.
@@ -251,12 +252,12 @@ following attributes:
   \item[frames] the length of the video file in frames, and
   \item[width\textmd, height] the resolution of the video file.
 \end{description}
-Beside the attributes, a video element contains a sequence of recording frames
+Beside the attributes, a video element contains a sequence of video file frames
 and lecture slides represented by frame elements and document elements,
 respectively.
 
 \subsubsection*{The frame element}
-A frame element corresponds to a single frame of a recording and contains the
+A frame element corresponds to a single frame of a video file and contains the
 following attributes:
 \begin{description}
   \item[number] the frame number in the video file,
@@ -274,13 +275,13 @@ screens represented by screen elements.
 
 \subsubsection*{The screen element}
 A screen element corresponds to a single lit projection screen on a single
-frame of a recording and contains the following attributes:
+frame of a video file and contains the following attributes:
 \begin{description}
   \item[x0\textmd, y0\textmd, x1\textmd, y1\textmd, x2\textmd, y2\textmd,
         x3\textmd, y3] coordinates with respect to the current frame
     of the recording that specify the four corners of a quadrilinear
     bounding a single lit projection screen,
-  \item[condition] the types of noise affecting this frame of the recording:
+  \item[condition] the types of noise affecting this video file frame:
     \begin{description}
       \item[windowed] the projection screen shows a lecture slide in a window
         rather than in a full-screen mode,
@@ -289,8 +290,8 @@ frame of a recording and contains the following attributes:
       \item[pristine] none of the above, and
     \end{description}
   \item[vgg256] two \abbr{VGG} feature vectors obtained by feeding the
-    cropped-out projection screen frame into the neural networks described in
-    the frame element.
+    cropped-out projection screen into the neural networks described in
+    the section about the frame element.
 \end{description}
 Beside the attributes, a screen element is in a relation to pages of lecture
 slides that is represented by a sequence of keyref elements.
@@ -347,7 +348,7 @@ the following attribute:
   \item[filename] the filename of the image file containing the page,
   \item[number] the number of the page in the \abbr{PDF} document,
   \item[vgg256] two \abbr{VGG} feature vectors obtained by feeding the page
-    into the neural networks described in the frame element.
+    into the neural networks described in the section about the frame element.
 \end{description}
 
 The dataset is distributed along with a Python interface implemented in files
@@ -379,9 +380,10 @@ Done processing the dataset, which contains:
 \end{listings}
 
 \subsection{Examples}
+\label{sec:examples}
 To give a better sense of the structure of the dataset, I will now give several
 examples along with the corresponding \abbr{XML} code, and the images of the
-recording frames, projection screens, and lecture side pages. I sorted the
+video file frames, projection screens, and lecture side pages. I sorted the
 individual types of structure in an increasing order of rarity. Examples
 are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
 
@@ -394,7 +396,7 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
       {A cropped-out \texttt{frame006000.png}}%
       {The image file \texttt{slides01-30.png}}
     \caption{A screen element in the usual case. Both the abbreviated code
-      of the \texttt{dataset.xml} document (above) and the recording frame,
+      of the \texttt{dataset.xml} document (above) and the video file frame,
       cropped-out projection screen, and the lecture slide page (below) are
       shown.}
     \label{fig:example-normal}
@@ -516,10 +518,11 @@ repository.\footnote{See
 
 \FloatBarrier
 \subsection{Preprocessing}
+\label{sec:preprocessing}
 The video frame images and lecture slide page images are preprocessed in the
 \texttt{preprocessing.Image.get\_image} method. I will now describe the
 individual steps in order of execution. Examples are shown in figures~%
-\ref{fig:system-preprocessing-first}--\ref{fig:system-preprocessing-last}.
+\ref{fig:preprocessing-first}--\ref{fig:preprocessing-last}.
 
 \begin{figure}
   \showthreeimages{fig/preprocessing}%
@@ -533,7 +536,7 @@ individual steps in order of execution. Examples are shown in figures~%
     {A cropped-out \texttt{frame050000.png} ($I_3$)}
   \caption{Cropping out a screen from two different video frame images, one
     matching the given lecture slide page and the other one not.}
-  \label{fig:system-preprocessing-first}
+  \label{fig:preprocessing-first}
 
   \kern\floatsep
   \showthreeimages{fig/preprocessing}%
@@ -566,10 +569,9 @@ individual steps in order of execution. Examples are shown in figures~%
     a foreground containing text and figures, and a background.
     More formally stated, I assume that if we disregard uneven illumination,
     the relative luminance $Y$ of a lecture slide page image pixel can be
-    accurately modeled as a continuous random variable with a bivariate
-    probability distribution. Under this model, the system needs to first
-    decide whether the foreground is brighter or darker compared to the
-    background region.
+    accurately modeled as a continuous bivariate random variable with. Under
+    this model, the system needs to first decide whether the foreground is
+    brighter or darker compared to the background.
     
     Given the observation that the background is typically significantly
     larger that the foreground, I use the Otsu's
@@ -601,7 +603,7 @@ individual steps in order of execution. Examples are shown in figures~%
       {The foreground of $I_2$ ($F_2$)}%
       {The foreground of $I_3$ ($F_3$)}
     \caption{Binarization of images $I_1,I_2$, and $I_3$.}
-    \label{fig:system-preprocessing-last}
+    \label{fig:preprocessing-last}
   \end{figure}
   \item[Uneven illumination removal]
     To remove the uneven illumination in a cropped-out presentation screen
@@ -635,6 +637,7 @@ individual steps in order of execution. Examples are shown in figures~%
 \end{description}
 
 \subsection{Feature extraction}
+\label{sec:features}
 After an image has been preprocessed, descriptors are extracted from the
 relative luminance $Y$ and the foreground $F$. I will now describe the
 individual \term{features} recognized by the system.
@@ -878,16 +881,73 @@ loss.
 \section{Results}
 \label{sec:results}
 
-\section{Conclusion and future work}
+\section{Conclusion}
 \label{sec:conclusion}
 
-\iffalse
-- Polarity flipping is applied before the removal of the uneven illumination.
-- Not all sources of noise were tackled.
-- The processing pipeline has not been tackled at all.
-- Pairwise histograms are ad-hoc.
-- Jupyter notebook todos.
-\fi
+\section{Future work}
+\label{sec:future-work}
+Only a few sources of noise described in Section~\ref{sec:noise} are tackled by
+the baseline system described in Section~\ref{sec:system-description}. The
+various types of dataset structure shown in Section~\ref{sec:examples}, such as
+a lecture slide being shown in a window rather than in a full-screen mode, are
+not addressed by the system.
+
+Relative luminance flipping described in Section~\ref{sec:preprocessing} is
+applied before the uneven illumination removal. This weakens the assumption that
+the relative luminance $Y$ can be accurately modeled as a continuous bivariate
+random variable. Future systems that make use of the relative luminance
+flipping should postpone the flipping until after the uneven illumination has
+been removed. This will require a model of uneven illumination that does not
+require the foreground to be darker compared to the background; possible models
+include
+\begin{itemize}
+  \item \term{high-pass filtering} in the frequency domain,
+  \item a sample statistic of frames from a recording such as the minimum
+    relative luminance at each pixel, and
+  \item models that incorporate both morphological closing and
+    \term{morphological opening} such as
+    \term{toggle-mappings}~\cite[sec.~8.5]{soille2013morphological} and
+    \term{sequential combinations}~\cite[sec.~8.2.2]{soille2013morphological}.
+\end{itemize}
+Systems that do not aim to extract the foreground may benefit from not
+performing relative luminance flipping at all.
+
+Since all images are resized to the resolution of $512\times 512$ pixels, two
+straightforward image descriptors to consider in future systems are the
+relative luminance $Y$ \term{flattened} to a continuous random vector of
+$512^2$ features, and the foreground $F$ flattened to a discrete random vector
+$F$ of $512^2$ features. Unlike e.g.\ the relative luminance histogram
+desscribed in Section~\ref{sec:features}, these descriptors are not
+translation- and rotation-independent and would require each cropped-out
+projection screen to be accurately registered with a lecture slide page. Other
+descriptors than these described in Section~\ref{sec:features} should also be
+considered~\cite{pass1999comparing}.
+
+The pairwise feature vector described in Section~\ref{sec:features} is an
+ad-hoc descriptor with no firm basis in prior literature.
+
+To detect the boundaries of lit projections screens for task 2, authors of
+future systems may wish to look in the following directions:
+\begin{itemize}
+  \item thresholding a sample statistic of frames from a recording such
+    as the upper quantile and the variance of the relative luminance at each pixel,
+  \item applying the \abbr{HCONVEX} morphological
+    operator~\cite[sec.~6.3.4]{soille2013morphological}, and
+  \item performing marker-controlled morphological
+    segmentation~\cite[sec.~9.3]{soille2013morphological}.
+\end{itemize}
+Another intriguing direction is to joinly solve both tasks 1a and 2 by
+registering lecture slides in a recording with a video
+frame~\cite{wolberg2000robust,zokai2004robust,matas2004robust}.
+
+A system that solves all tasks may benefit from combining the individual parts
+of the system the individual tasks. For example, when the part of the system
+solving task 3 reports the frames in which a projection screen shows new
+content, the part of the system solving task 1a may decide to process the
+frames in decreasing order of certainty. After deciding which lecture slide
+pages are shown in the high-certainty frames, it can use regression in the time
+domain to predict which lecture slide pages are likely to be shown in the
+remaining frames.
 
 \section*{Acknowledgement}
 The following lecturers, listed in no particular order, kindly consented with
