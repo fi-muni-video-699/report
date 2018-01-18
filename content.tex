@@ -1502,8 +1502,10 @@ misclassifications.
   \leavevmode\kern-.075\textwidth
 \fi
 \input tables/model-selection-task1b
-\caption{Inner cross-validation (model selection) results for task 1b. Results
-  for all 11 parametrized task 1b models are shown.}
+\caption{Inner cross-validation (model selection) results for task 1b.
+\ifarticle
+  Results for all 11 parametrized task 1b models are shown.%
+\fi}
 \label{tab:model-selection-task1b}
 \end{table}
 \end{frame}
@@ -1528,7 +1530,7 @@ Results of the evaluation for the task 1a models are given in tables
 In both the model selection and the performance estimation, the empirical
 confidence intervals are too wide for any statistically significant statements.
 At least according to the expected value of the evaluation measure ($8.62$),
-the system performs better than random (TODO).
+the system performs better than random ($24.80$).
 It is worth noting that the highest-ranking model uses neither relative
 luminance flipping ($\theta_1=\text{False}$) nor does it use any of the
 modified forms of the relative luminance histograms ($\theta_3=(\text{False},
@@ -1538,10 +1540,10 @@ Results of the evaluation for the task 1b models are given in tables
 \ref{tab:model-selection-task1b} and \ref{tab:performance-estimation-task1b}.
 Due to the normal approximation, the confidence intervals are much narrower. If
 we accept the normality assumption, then we can state at a 95\% confidence
-level that the system (TODO) performs better than random (TODO). However, since
-only 93 out of the 683 projection screens in the dataset have no matching
-lecture slide pages, the system does not perform better than conservative
-(TODO).
+level that the system ($0.0000$--$0.0943$) performs better than random
+($0.4224$--$0.6976$). However, since only 93 out of the 683 projection screens
+in the dataset have no matching lecture slide pages, the system does not
+perform better than conservative ($0.0000$--$0.0000$).
 
 \iffalse
 Model selection, task 1b:
