@@ -1,21 +1,60 @@
 \title[Lecture slide retrieval]{Slide retrieval based on lecture recordings}
+\mode<presentation>{\subtitle{\color{black}\faGithub\ \href{https://github.com/fi-muni-video-699}{github.com/fi-muni-video-699}}}
 \author[V.\,Novotný]{Vít Novotný, witiko@mail.muni.cz}
+\year=2018\month=1\day=19
 \institute[FI MU]{Faculty of Informatics, Masaryk University}
 \subject{Project report}
 \keywords{information retrieval, image processing, pattern recognition}
 
+\begin{document}
+\begin{frame}[plain]
 \maketitle
-
-\begin{frame}
-\frametitle<presentation>{Table of Contents}
-\tableofcontents
 \end{frame}
 
-\section{Introduction}
+\AtBeginSection[]{% Print an outline at the beginning of sections
+  \begin{frame}
+    \frametitle{Outline for Section~\thesection}
+    \begin{multicols}{2}
+    \vspace*{-.4em}
+    \tableofcontents[currentsection]
+    \end{multicols}
+  \end{frame}}
+
+\begin{frame}
+
+\mode
+<presentation>
+
+\frametitle{Table of contents}
+\begin{multicols}{2}
+\vspace*{-.4em}
+
+\mode
+<all>
+
+\tableofcontents
+
+\mode
+<presentation>
+
+\end{multicols}
+
+\mode
+<all>
+
+\end{frame}
+
+\mode
+<article>
+
+
+\mode
+<all>{%
+\section{Introduction}}
 Since the spring of 2004, the Faculty of Informatics at the Masaryk University
-in Brno, Czech Republic (FI MU) has been recording lectures that take place in
-the \abbr{D1}, \abbr{D2}, and \abbr{D3} lecture halls and making these
-recordings available to students at the
+in Brno, Czech Republic (\abbr{FI} \abbr{MU}) has been recording lectures that
+take place in the \abbr{D1}, \abbr{D2}, and \abbr{D3} lecture halls and making
+these recordings available to students at the
 \href{https://www.video.muni.cz}{video.muni.cz} web site as \term{digital video
 files}~\cite{hladkaliska03lectures}. These recordings are a valuable learning
 resource; however, due to the lack of information about the structure and the
@@ -26,15 +65,15 @@ content of these recordings, it is difficult to
 \item transform the information contained in the recording to a form that is more
   accessible to visually impaired users.
 \end{enumerate}
-As a result, the usefulness of these recordings is rarely fully exploited.
+% As a result, the usefulness of these recordings is rarely fully exploited.
 
 Most lecturers accompany their lectures with \term{lecture slides} that are shown
-on the recordings and, at the same time, available for the students as a part of
+in the recordings and, at the same time, available to the students as a part of
 the course materials in the form of structured \abbr{PDF} documents. One way to
 add structured information to the recordings is then to find a mapping between the
 temporal dimension of a recording and the pages of the corresponding lecture
-slides. This gives us the digital form of the text that is being shown on any
-given \term{frame} of the video files, which can be immediately used to
+slides. This gives us the digital text shown in any given \term{frame} of the
+video files, which can be immediately used to
 \begin{enumerate}
 \item retrieve portions of recordings relevant to the user's information need
   expressed in the form of a text query and
@@ -43,28 +82,63 @@ given \term{frame} of the video files, which can be immediately used to
 \end{enumerate}
 Other uses include the improvement of the perceived recording quality by
 superimposing a high-resolution rendering of the \abbr{PDF} document pages on
-the low-resolution digital video files.
+the low-resolution video files.
+
+\mode
+<presentation>
+
+\begin{frame}{Introduction}
+\begin{itemize}[<+->]
+  \item Since 2014, \abbr{FI} \abbr{MU} has been recording lectures in \abbr{D1},
+    \abbr{D2}, and \abbr{D3} lecture halls.~\cite{hladkaliska03lectures}
+  \item Recordings are available at
+    \href{https://www.video.muni.cz}{video.muni.cz}. However, it is difficult to:%
+    \begin{enumerate}
+      \item retrieve recordings relevant to the user's \term{information need},
+      \item find relevant portions in the retrieved recordings, and
+      \item transform the recording to a form that is more accessible to visually
+        impaired users.
+    \end{enumerate}
+  \item As a result, the usefulness of these recordings is rarely fully exploited.
+  \bigskip
+  \item By mapping the temporal dimension of the recordings to lecture
+    slides, we can extract the digital text shown in any given frame, which
+    can be immediately used to:%
+    \begin{enumerate}
+      \item retrieve portions of recordings relevant to a text query and
+      \item convey the text to the visually impaired user using a reading device.
+    \end{enumerate}
+  \item Other uses include superimposing a high-resolution rendering of the
+    \abbr{PDF} document pages on the low-resolution video files.
+\end{itemize}
+\end{frame}
+
+\mode
+<article>
 
 The text is structured as follows: In Section~\ref{sec:problem}, I will
-break down the problem into individual tasks and describe the evaluation
-measures. In Section~\ref{sec:dataset}, I will describe the dataset
-that I built for the \term{training}, \term{model selection}, and
-\term{performance estimation} of systems solving the tasks. In
+state the problem, break it down into tasks and describe the evaluation
+measures. In Section~\ref{sec:dataset}, I will describe the dataset that I
+built for evaluating systems solving the tasks. In
 Section~\ref{sec:system-description}, I will describe a baseline system that
-solves task 1. In Section~\ref{sec:experimental-setup}, I will describe
-the evaluation of the baseline system. In Section~\ref{sec:results},
-I will give the evaluation results. In Section~\ref{sec:conclusion}, I will
-state my conclusion. In Section~\ref{sec:future-work}, I will outline venues
-for future work.
+solves task 1. In Section~\ref{sec:experimental-setup}, I will describe the
+evaluation of the baseline system. In Section~\ref{sec:results}, I will give
+the evaluation results. In Section~\ref{sec:conclusion}, I will state my
+conclusion. In Section~\ref{sec:future-work}, I will outline venues for future
+work.
 
+\mode
+<all>{%
 \section{Problem statement}
-\label{sec:problem}
+\label{sec:problem}}
 In this section, I will describe the problems associated with mapping lecture
-recordings to lecture slide pages and I will specify the tasks a system will
-need to solve.
+recordings to lecture slide pages and specify the tasks a system will need
+to~solve.
 
+\mode
+<all>{%
 \subsection{Sources of noise}
-\label{sec:noise}
+\label{sec:noise}}
 To better understand the intricacies of our task, let us first discuss what
 kinds of \term{noise} we can expect to appear in our recordings.
 
@@ -78,17 +152,17 @@ than in a full-screen mode. Therefore, finding the position of a projection
 screen and finding the position of a lecture slide page within a
 \term{projection screen} become two distinct tasks.
 
-\paragraph{Scene} Let $\mathcal X$ be the \term{color space} of the lecture
-slides, $\mathcal Y$ the color space of the \term{projector}, and
-$\Phi_{\mathcal X},\Phi_{\mathcal Y}$ the maps to a common color space
-$\mathbb K$. If the overlap between $\Phi_{\mathcal X}(\mathcal X)$ and
-$\Phi_{\mathcal Y}(\mathcal Y)$ is small, $\Phi^{-1}_{\mathcal
-Y}(\Phi_{\mathcal X}(\mathcal X))$ will be a poor representation of $\mathcal
-X$. Even if $\Phi_{\mathcal X}(\mathcal X)\approx\Phi_{\mathcal Y}(\mathcal
-Y)$, the \term{reflectance} of the projection screen surface will distort the
-colors.
-Due to the lightning conditions, the projection screen will in general be
-\term{unevenly lit}.
+Let $\mathcal X$ be the \term{color space} of the lecture slides, $\mathcal Y$
+the color space of the \term{projector}, and $\Phi_{\mathcal X},\Phi_{\mathcal
+Y}$ the maps to a common color space $\mathbb K$. If the overlap between
+$\Phi_{\mathcal X}(\mathcal X)$ and $\Phi_{\mathcal Y}(\mathcal Y)$ is small,
+$\Phi^{-1}_{\mathcal Y}(\Phi_{\mathcal X}(\mathcal X))$ will be a poor
+representation of $\mathcal X$.
+
+\paragraph{Scene} Even if $\Phi_{\mathcal X}(\mathcal X)\approx\Phi_{\mathcal
+Y}(\mathcal Y)$, the \term{reflectance} of the projection screen surface will
+distort the colors. Due to the lightning conditions, the projection screen
+will in general be \term{unevenly lit}.
 
 \term{Obstacles} positioned between the \term{camera lens} and a projection
 screen may partially obscure the recorded lecture slides.
@@ -102,14 +176,14 @@ color space of the camera, will further distort the colors.
 Due to the defects in the optical system of the camera, a lecture room
 recording will suffer from a number of \term{aberrations} such as defocus and
 distortion. In addition, if the camera is not perpendicular to a projection
-screen, an \term{perspective transformation} of the recording will be necessary to
+screen, a \term{perspective transformation} of the recording will be necessary to
 \term{crop out} the region corresponding to a projection screen and make it
 rectangular. Given an incorrectly positioned camera, or a camera with
 \term{telephoto lens}, portions of the projection screen will fall \term{beyond
 the bounds} of the captured scene.
 
 Unlike lecture slides, which are generally provided in the form of vector
-\abbr{PDF} documents, the resulting digital video files are a result of
+\abbr{PDF} documents, the resulting digital video files are a result of:
 \begin{enumerate}
   \item temporal sampling into frames at a given \term{framerate},
   \item spatial sampling at a given \term{resolution},
@@ -119,8 +193,61 @@ Unlike lecture slides, which are generally provided in the form of vector
 applied to the original recording. Each of the above reduces the amount of
 information present in the digital video file.
 
+\mode
+<presentation>
+
+\begin{frame}{Sources of noise I}
+\begin{description}[<+->]
+  \item[Projection]
+    Projected lecture slides may:
+    \begin{itemize}
+      \item contain additional pages with \term{incrementally uncovered} content,
+      \item be shown in a window rather than in a full-screen mode, or
+      \item show distorted colors due to small overlap between the color spaces
+        of the lecture slides and the projector.
+    \end{itemize}
+
+  \item[Scene]
+    The \term{reflectance} of a projection screen and uneven illumination
+    introduces further noise. 
+    \term{Obstacles} positioned between the \term{camera lens} and a projection
+    screen may partially obscure the recorded lecture slides.
+\end{description}
+\end{frame}
+
+\begin{frame}{Sources of noise II}
+\begin{description}
+\item[Capture]
+  Guesswork in assessing \term{color temperature} and small overlap between the
+  color spaces of the projector and a camera introduces additional color
+  distortion. Defects in the optical system of a camera introduces
+  \term{aberrations}.\pause
+    
+  If the camera is nor perpendicular to a projection screen, a
+  \term{perspective transformation} of the recording will be necessary to
+  \term{crop out} the projection screen and make it rectangular.
+  Given an incorrectly positioned camera, portions of the screen
+  will fall \term{beyond the bounds} of the captured scene.\pause
+
+  The resulting digital files are a result of:\pause
+  \begin{enumerate}
+  \item temporal sampling into frames at a given \term{framerate},\pause
+  \item spatial sampling at a given \term{resolution},\pause
+  \item light frequency sampling at a given \term{color depth},\pause
+  \item \term{chroma subsampling}, and \pause
+  \structure{5.} \term{lossy compression} \pause applied to the recording.
+  \end{enumerate}
+\end{description}
+\end{frame}
+
+\mode
+<article>
+
+
+\mode
+<all>{%
 \subsection{Tasks}
-\label{sec:tasks}
+\label{sec:tasks}}
 Given the above analysis, a system mapping lecture recordings to lecture slides
 will need to solve the following tasks listed in bottom-up order:
 \begin{enumerate}
@@ -188,12 +315,46 @@ at which the following events take place:
   \item a projection screen shows new content.
 \end{enumerate}
 To compare two systems, we can take events of each type and estimate the
-expected value of standard segmentation similarity metrics such as boundary
-similarity ($\textrm B$)~\cite{P13-1167} for the event type between each system
-and one or several test datasets.
+expected value of a segmentation similarity metric such as boundary similarity
+($\textrm B$)~\cite{P13-1167} for an event type between each system on one or
+several test datasets.
 
+\mode
+<presentation>
+
+\begin{frame}{Tasks}
+\begin{description}[<+->]
+  \item[Task 1a]
+    Given a single cropped-out projection screen and a set of lecture slide
+    pages, the task is to retrieve the page that is most similar to the screen.
+
+  \item[Task 1b]
+    Given a single cropped-out projection screen and a set of lecture slide
+    pages, the task is to decide whether the screen matches any page in the set.
+
+  \item[Task 2]
+    Given a single video file frame, the task is to detect the boundaries of all
+    lit projection screens.
+
+  \item[Task 3]
+    Given a single recording, the task is to detect the frames at which the
+    following events take place:
+    \begin{enumerate}
+      \item a new projection screen is lit,
+      \item a projection screen is no longer lit, or
+      \item a projection screen shows new content.
+    \end{enumerate}
+\end{description}
+\end{frame}
+
+\mode
+<article>
+
+
+\mode
+<all>{%
 \section{Dataset}
-\label{sec:dataset}
+\label{sec:dataset}}
 As a first step in building and evaluating a system solving the above tasks, I
 built a dataset from the recordings published at
 \href{https://www.video.muni.cz}{video.muni.cz}.
@@ -203,19 +364,21 @@ during 2010--2016. This was mainly due to the difficulty in reaching out to
 the lecturers who are often no longer a part of the faculty, and the variance
 in the video file format encoding and resolution. From the uniform distribution
 of these recordings, I drew a random sample that would form my dataset.
+
 The original sample consisted of 20 recordings. For three recordings, I was
 unable to establish communication with the lecturers to request their consent.
 For three other recordings, the lecturers would not give consent to including
 the recordings in the dataset; I drew three recordings from the uniform
 distribution of recordings as substitutes.
-
 The dataset has been published in a Git repository.\footnote{See
   \href{https://github.com/fi-muni-video-699/dataset}%
        {github.com/fi-muni-video-699/dataset} or
   \href{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-699}%
        {gitlab.fi.muni.cz/xnovot32/fi-muni-video-699}.}
 
-\subsection{Dataset structure}
+\mode
+<all>{%
+\subsection{Dataset structure}}
 The dataset consists of 17 recordings. For the purpose of solving tasks 1 and
 2, a recording consists of a set of lecture slides and a sample of the video
 file frames. Since the systems solving tasks 1 and 2 will only be invoked by
@@ -233,6 +396,20 @@ the language \texttt{schema.xsd} shown in Figure~\ref{fig:schema}. The root
 element of \texttt{dataset.xml} consists of a sequence of recordings
 represented by video elements. I will now describe the individual elements of
 the language:
+
+\mode
+<presentation>
+
+\begin{frame}{Dataset structure I}
+The dataset consists of 17 recordings. It is represented by an \abbr{XML}
+document \texttt{dataset.xml} in the language \texttt{schema.xsd}:
+\begin{center}
+  \includegraphics[width=\textwidth]{fig/structure/schema}
+\end{center}
+\end{frame}
+
+\mode
+<article>
 
 \begin{figure}
   \leavevmode\kern-0.13\textwidth
@@ -296,6 +473,17 @@ frame of a video file and contains the following attributes:
 Beside the attributes, a screen element is in a relation to pages of lecture
 slides that is represented by a sequence of keyref elements.
 
+\afterpage{%
+\begin{landscape}
+\begin{figure}
+  \leavevmode\kern-.117\paperheight
+  \includegraphics[width=.95\paperheight]{fig/structure/uml}
+  \caption{A \abbr{UML} class diagram of the Python interface for the dataset
+    \iffalse produced using the \term{Umbrello} tool\fi}
+  \label{fig:uml}
+\end{figure}
+\end{landscape}}
+
 \subsubsection*{The keyref element}
 A keyref element corresponds to a single 2-tuple from a binary relation between
 lit projection screens and lecture slide pages and contains the following
@@ -320,17 +508,6 @@ vaguely about a projection screen „matching“ a lecture slide page. To give a
 precise definition, a lit projection screen $s$ matches a lecture slide page $p$ if
 and only if \[s\approx p\lor\big(\nexists p'(s\approx p')\land s\sim p\big).\]
 
-\afterpage{%
-\begin{landscape}
-\begin{figure}
-  \leavevmode\kern-.117\paperheight
-  \includegraphics[width=.95\paperheight]{fig/structure/uml}
-  \caption{A \abbr{UML} class diagram of the Python interface for the dataset
-    \iffalse produced using the \term{Umbrello} tool\fi}
-  \label{fig:uml}
-\end{figure}
-\end{landscape}}
-
 \subsubsection*{The document element}
 A document element corresponds to a single set of lecture slides and contains
 the following attribute:
@@ -351,20 +528,26 @@ the following attribute:
     into the neural networks described in the section about the frame element.
 \end{description}
 
+\mode
+<all>
+
+\begin{frame}[fragile]
+\frametitle<presentation>{Dataset structure II}
+\mode<article>{%
 The dataset is distributed along with a Python interface implemented in files
 \texttt{dataset.py} and \texttt{review.py} whose class diagram is shown in
-Figure~\ref{fig:uml}. Load the dataset as follows:
+Figure~\ref{fig:uml}. Load the dataset as follows:}
+\mode<presentation>{%
+The dataset is distributed along with a Python interface. Load it as follows:}
 \begin{listings}
 \begin{minted}{bash}
-$ git clone git@gitlab.fi.muni.cz:xnovot32/fi-muni-video-699 dataset
+$ git clone https://github.com/fi-muni-video-699/dataset.git
 $ mkvirtualenv -p $(which python3) dataset
-(dataset) $ pip install --upgrade pip
-(dataset) $ pip install --requirement dataset/requirements.txt
+(dataset) $ pip install -U pip; pip install -r dataset/requirements.txt
 (dataset) $ python
 \end{minted}
 \begin{minted}{python}
->>> import logging
->>> from dataset import Dataset
+>>> import logging; from dataset import Dataset
 >>> logging.basicConfig(level=logging.INFO, format="%(message)s")
 >>> dataset = Dataset("dataset")
 \end{minted}
@@ -378,14 +561,21 @@ Done processing the dataset, which contains:
 - 25 documents containing 925 pages.
 \end{verbatim}
 \end{listings}
+\end{frame}
 
+\mode
+<article>
+
+
+\mode
+<all>{%
 \subsection{Examples}
-\label{sec:examples}
+\label{sec:examples}}
 To give a better sense of the structure of the dataset, I will now give several
 examples along with the corresponding \abbr{XML} code, and the images of the
 video file frames, projection screens, and lecture side pages. I sorted the
-individual types of structure in an increasing order of rarity. Examples
-are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
+individual structures in an increasing order of rarity. Examples are shown in
+figures \ref{fig:example-first}--\ref{fig:example-last}.
 
 \begin{description}
   \begin{figure}
@@ -408,6 +598,22 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
     associated lecture slides in full-screen mode. An example is shown in
     Figure~\ref{fig:example-normal}.
 
+\mode
+<presentation>
+
+  \begin{frame}{The usual case}
+    In 371 out of the total 683 screen elements, the projection screen is
+    captured fully without any obstacles positioned between the camera lens and
+    the screen and it shows a single page from the associated lecture slides in
+    full-screen mode:
+
+    \showthreeimages{fig/examples/normal}%
+      {frame006000.png}{frame006000-00.png}{slides01-30.png}
+  \end{frame}
+
+\mode
+<article>
+
   \begin{figure}
     \inputminted{xml}{fig/examples/incremental/example.xml}\par
     \showtwoimages{fig/examples/incremental}%
@@ -426,6 +632,27 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
     the projection screen shows only the same logical page as some of the
     lecture slide pages. An example is shown in
     Figure~\ref{fig:example-incremental}.
+
+\mode
+<presentation>
+
+  \begin{frame}{Incremental matches}
+    In 125 out of the total 683 screen elements,
+    the projection screen shows only the same logical page as some of the
+    lecture slide pages:
+
+    \showtwoimages{fig/examples/incremental}%
+      {frame052000.png}{frame052000-01.png}%
+  \end{frame}
+  \begin{frame}[plain]
+    \showtwoimages{fig/examples/incremental}%
+      {frame052000.png}{frame052000-01.png}%
+    \showthreeimages{fig/examples/incremental}%
+      {slides01-31.png}{slides01-32.png}{slides01-33.png}%
+  \end{frame}
+
+\mode
+<article>
 
   \begin{figure}
     \inputminted{xml}{fig/examples/beyond-bounds/example.xml}\par
@@ -455,6 +682,28 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
     that a system solving task 1b should be able to detect.
     An example is shown in Figure~\ref{fig:example-no-keyrefs}.
 
+\mode
+<presentation>
+
+  \begin{frame}{A screen beyond bounds}
+    In 108 out of the total 683 screen elements, the projection screen is
+    captured only partially in the recording:
+
+    \showthreeimages{fig/examples/beyond-bounds}%
+      {frame004000.png}{frame004000-00.png}{slides01-12.png}%
+  \end{frame}
+  \begin{frame}{No matching pages}
+    In 93 out of the total 683 screen elements, the projection screen shows
+    none of the lecture slide pages – a condition that a system solving task 1b
+    should be able to detect:
+
+    \showthreeimages{fig/examples/no-keyrefs}%
+      {frame004000.png}{frame004000-00.png}{frame004000-01.png}%
+  \end{frame}
+
+\mode
+<article>
+
   \begin{figure}
     \inputminted{xml}{fig/examples/incremental-only/example.xml}\par
     \showthreeimages{fig/examples/incremental-only}%
@@ -480,10 +729,33 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
     the projection screen shows none of the lecture slide pages; it shows only
     the same logical page as some of the lecture slide pages.
     An example is shown in Figure~\ref{fig:example-incremental-only}.
-  \item[Windowed lecture slide] In 6 out of the total 683 screen elements,
+  \item[A windowed lecture slide] In 6 out of the total 683 screen elements,
     the projection screen shows a lecture slide page in a window rather than
     in a full-screen mode. An example is shown in
     Figure~\ref{fig:example-windowed}.
+
+\mode
+<presentation>
+
+  \begin{frame}{Only incremental matches}
+    In 60 out of the total 683 screen elements, the projection screen shows
+    none of the lecture slide pages; it shows only the same logical page as
+    some lecture slide page:
+
+    \showthreeimages{fig/examples/incremental-only}%
+      {frame040000.png}{frame040000-00.png}{slides02-06.png}%
+  \end{frame}
+  \begin{frame}{A windowed lecture slide}
+    In 6 out of the total 683 screen elements,
+    the projection screen shows a lecture slide page in a window rather than
+    in a full-screen mode:
+
+    \showthreeimages{fig/examples/windowed}%
+      {frame080000.png}{frame080000-01.png}{slides01-02.png}%
+  \end{frame}
+
+\mode
+<article>
 
   \begin{figure}[!t]
     \inputminted{xml}{fig/examples/obstacle/example.xml}\par
@@ -501,11 +773,28 @@ are shown in figures \ref{fig:example-first}--\ref{fig:example-last}.
     the projection screen is partially obscured by an obstacle positioned
     between the camera lens and the screen.
     An example is shown in Figure~\ref{fig:example-obstacle}.
+
+\mode
+<presentation>
+
+  \begin{frame}{Obscured projection screen}
+    In 5 out of the total 683 screen elements,
+    the projection screen is partially obscured by an obstacle positioned
+    between the camera lens and the screen:
+
+    \showthreeimages{fig/examples/obstacle}%
+      {frame090000.png}{frame090000-01.png}{slides01-28.png}%
+  \end{frame}
+
+\mode
+<article>
 \end{description}
 
 \FloatBarrier
+\mode
+<all>{%
 \section{System description}
-\label{sec:system-description}
+\label{sec:system-description}}
 To provide a baseline for future systems and a reference for using the Python
 interface for the dataset, I implemented a baseline system that solves task 1.
 In this section, I will give a description of its structure and the used
@@ -516,9 +805,10 @@ repository.\footnote{See
   \href{https://gitlab.fi.muni.cz/xnovot32/fi-muni-video-system}%
        {gitlab.fi.muni.cz/xnovot32/fi-muni-video-system}.}
 
-\FloatBarrier
+\mode
+<all>{%
 \subsection{Preprocessing}
-\label{sec:preprocessing}
+\label{sec:preprocessing}}
 The video frame images and lecture slide page images are preprocessed in the
 \texttt{preprocessing.Image.get\_image} method. I will now describe the
 individual steps in order of execution. Examples are shown in figures~%
@@ -549,7 +839,7 @@ individual steps in order of execution. Examples are shown in figures~%
 \end{figure}
 \begin{description}
   \item[Cropping out a screen]
-    Since the system does not solve task 2, the system expects to be given the
+    Since the system does not solve task 2, it expects to be given the
     boundaries of a lit projection screen along with a video frame image. By
     applying a perspective transform~\cite[sec.~2]{eberly11}, I crop out the
     projection screen out of the frame image.
@@ -578,9 +868,45 @@ individual steps in order of execution. Examples are shown in figures~%
     method~\cite{otsu1979threshold} to threshold~$Y$. If the ratio between the
     number of pixels above and below the threshold is greater than $1.8$, I
     assume that the foreground is darker than the background. Otherwise, I
-    \term{fiip} the relative luminance and assign $Y\leftarrow1-Y$.
+    \term{flip} the relative luminance and assign $Y\leftarrow1-Y$.
     Optionally, this step may be skipped; this choise is controlled by the
     parameter $\theta_1$.
+
+\mode
+<presentation>
+
+  \begin{frame}{Cropping out a screen}
+    Since the system does not solve task 2, it expects to be given the
+    boundaries of a lit projection screen along with a video frame image. By
+    applying a perspective transform~\cite[sec.~2]{eberly11}, I crop out the
+    projection screen out of the frame image:
+
+    \showthreeimages{fig/preprocessing}%
+      {page_rgb}{frame_rgb}{other_frame_rgb}%
+  \end{frame}
+  \begin{frame}[plain]
+    \showthreeimages{fig/preprocessing}%
+      {page_rgb}{frame_rgb}{other_frame_rgb}%
+    \showtwoimages{fig/preprocessing}%
+      {screen_rgb}{other_screen_rgb}%
+  \end{frame}
+
+  \begin{frame}{Color removal and relative luminance flipping}
+    I reduce an image $I$ to the relative luminance $Y=0.2126\cdot
+    R+0.7152\cdot G+0.0722\cdot B$.\pause
+
+    Since the background is typically significantly larger that the foreground,
+    I use the Otsu's method~\cite{otsu1979threshold} to threshold~$Y$. If the
+    ratio between the number of pixels above and below the threshold is less
+    than $1.8$, I \term{flip} the relative luminance and assign
+    $Y\leftarrow1-Y$:
+
+  \showthreeimages{fig/preprocessing}%
+    {page_img_noillumination}{screen_img_noillumination}{other_screen_img_noillumination}%
+  \end{frame}
+
+\mode
+<article>
 
   \begin{figure}
     \showtwoimages{fig/preprocessing}%
@@ -634,10 +960,50 @@ individual steps in order of execution. Examples are shown in figures~%
     \term{morphological opening by reconstruction} with an elliptical
     structural element of size 3, and by removing any connected regions
     touching the image boundary.
+
+\mode
+<presentation>
+
+  \begin{frame}{Uneven illumination removal, intensity stretching, change of size}
+    To remove the uneven illumination in a cropped-out presentation screen
+    image, I use \term{morphological closing} $\gamma_\blacksquare$. I assign
+    $Y\leftarrow 1-(\gamma_\blacksquare(Y)-Y)$.\pause
+
+    To make the relative luminance of the two images identical, I assign
+    $Y\leftarrow\frac{Y-\min(Y)}{\max(Y)-\min(Y)}$.\pause
+
+    To work with homogeneous data, I resize all images to the resolution of
+    $512\times 512$ pixels:
+
+    \showthreeimages{fig/preprocessing}%
+      {page_img_noillumination}{screen_img}{other_screen_img}%
+  \end{frame}
+  \begin{frame}[plain]
+    \showtwoimages{fig/preprocessing}%
+      {J}{J_}%
+    \showthreeimages{fig/preprocessing}%
+      {page_img_noillumination}{screen_img}{other_screen_img}%
+  \end{frame}
+
+  \begin{frame}{Binarization}
+    For each image, I use the Otsu's method~\cite{otsu1979threshold} to
+    threshold~$Y$ into dark foreground pixels $F$. $F$ is denoised by
+    applying a \term{morphological opening by reconstruction} with an
+    elliptical structural element of size 3, and by removing regions touching
+    the image boundary:
+
+    \showthreeimages{fig/preprocessing}%
+      {page_img-bw}{screen_img-bw}{other_screen_img-bw}%
+  \end{frame}
+
+\mode
+<article>
 \end{description}
 
+\mode
+<all>{%
 \subsection{Feature extraction}
-\label{sec:features}
+\label{sec:features}}
 After processing an image, descriptors are extracted from the
 relative luminance $Y$ and the foreground $F$. I will now describe the
 \term{features} recognized by the~system:
@@ -679,6 +1045,37 @@ relative luminance $Y$ and the foreground $F$. I will now describe the
     Figure~\ref{fig:system-features-row-histograms}. Combined with the number
     of rows, this yields 33 features.
 
+\mode
+<presentation>
+
+  \begin{frame}{Foreground rows I}
+    Rows are extracted from $F$ by applying morphological dilation
+    $\delta_{{}-{}}$ with a structural element in the shape of a horizontal
+    line of length $2\times 512+1$:
+
+    \showthreeimages{fig/preprocessing}%
+      {page_img-rows}{screen_img-rows}{other_screen_img-rows}%
+  \end{frame}
+  \begin{frame}{Foreground rows II}
+    To obtain a fixed number of features, the row heights are represented by a
+    histogram with 16 equal-width bins:
+
+    {\setlength{\fboxrule}{0pt}%
+     \showthreeimages{fig/preprocessing}%
+       {row_histogram-0_0}{row_histogram-0_1}{row_histogram-0_2}}
+  \end{frame}
+  \begin{frame}{Foreground rows III}
+    To obtain a fixed number of features, the row altitudes are represented by
+    a histogram with 16 equal-width bins:
+
+    {\setlength{\fboxrule}{0pt}%
+     \showthreeimages{fig/preprocessing}%
+       {row_histogram-1_0}{row_histogram-1_1}{row_histogram-1_2}}
+  \end{frame}
+
+\mode
+<article>
+
   \begin{figure}
     {\setlength{\fboxrule}{0pt}%
      \showthreeimages{fig/preprocessing}%
@@ -697,7 +1094,28 @@ relative luminance $Y$ and the foreground $F$. I will now describe the
     page images in the current video; these choices are controlled by the
     parameter $\theta_3$. An example is shown in
     Figure~\ref{fig:system-features-relative-luminance}.
+
+\mode
+<presentation>
+
+  \begin{frame}{Relative luminance}
+    A histogram is extracted from $Y$ with 16 equal-width bins. Optionally, the
+    histogram can be extracted only from foreground row pixels and each pixel
+    can be assigned a weight according to its variance across all lecture slide
+    page images in the current video:
+
+    {\setlength{\fboxrule}{0pt}%
+     \showthreeimages{fig/preprocessing}%
+       {histogram-1_0}{histogram-1_1}{histogram-1_2}}
+  \end{frame}
+
+\mode
+<article>
+
 \end{description}
+
+\mode
+<article>
 
 The \texttt{preprocessing.Features.get\_features} method takes the above
 features to produce a single vector of 101 features. Optionally, the \abbr{VGG}
@@ -710,21 +1128,58 @@ $\bm\theta=(\theta_1,\theta_2,\theta_3)$, computes the corresponding feature
 vectors, and concatenates them to obtain a \term{full vector} of 8080 or 49040
 features.
 
-The \texttt{preprocessing.Features.get\_pairwise\_features} method takes a
+The \texttt{preprocessing.Features.get\_pairwise\_features} method takes
 a lecture slide page image, a cropped-out presentation screen image and
-computes the difference between their full feature vectors to obtain a
+computes the \abbr{L1} distance between their full feature vectors to obtain a
 \term{pairwise vector}.
 
+\mode
+<presentation>
+
+\begin{frame}{Feature vectors}
+Haralick features, foreground row histograms, the number of foreground rows
+and a relative luminance histogram are combined into feature vectors as
+follows:
+\begin{description}[<+->]
+  \item[Feature vectors]
+    The above features are combined for a single value of the preprocessing
+    parameter $\bm\theta$ to produce a single vector of 101 or 613 features.
+
+  \item[Full feature vectors]
+    The above features are computed for all values of the preprocessing parameter
+    $\bm\theta$ to obtain a \term{full vector} of 8080 or 49040 features.
+
+  \item[Pairwise feature vectors]
+    Given a lecture slide page image and a cropped-out presentation screen
+    image, the pairwise feature vector is the \abbr{L1} distance between the
+    corresponding full feature vectors.
+\end{description}
+\end{frame}
+
+\mode
+<all>
+
 \subsection{Models}
+\begin{frame}
+\frametitle<presentation>{Task 1a models I}
 Using the extracted features, several pattern recognition \term{models} are
 used to solve task 1. I will now describe the models for solving task 1a:
 
-\begin{description}
+\begin{description}[<+->]
   \item[Dummy models]
     Given a cropped-out projection screen and a set of lecture slide pages, the
     lecture slide pages are ranked either randomly (random), or so that the
     lecture slide pages matching the projection screen receive the highest
-    (best) or the lowest (worst) rank. Dummy models are a baseline.
+    (best) or the lowest (worst) rank.
+
+\mode
+<article>
+
+    The models are defined in the
+    \texttt{models.task1.subtaska.dummy} \term{module}.
+
+\mode
+<all>
 
   \item[Row numbers]
     Given a cropped-out projection screen and a set of lecture slide
@@ -732,10 +1187,25 @@ used to solve task 1. I will now describe the models for solving task 1a:
     the difference between the number of foreground rows in the projection
     screen and in a lecture slide page in ascending order.
 
+\mode
+<article>
+
     The model is defined in the
-    \texttt{models.task1.subtaska.row\_numbers} \term{module}.
+    \texttt{models.task1.subtaska.row\_numbers} module.
     It is parametrized by the parameter $\bm\theta$ that specifies the
     preprocessing.
+
+\mode
+<presentation>
+
+\end{description}
+\end{frame}
+\begin{frame}
+\frametitle<presentation>{Task 1a models II}
+\begin{description}[<+->]
+
+\mode
+<all>
 
   \item[\abbr{VGG}]
     Given a cropped-out projection screen and a set of lecture slide
@@ -743,6 +1213,9 @@ used to solve task 1. I will now describe the models for solving task 1a:
     similarity between the \abbr{VGG} feature vector of the cropped-out
     projection screen and the \abbr{VGG} feature vector of a lecture slide page
     in descending order.
+
+\mode
+<article>
     
     The model is defined in the
     \texttt{models.task1.subtaska.vgg256} module. It is parametrized by
@@ -752,12 +1225,18 @@ used to solve task 1. I will now describe the models for solving task 1a:
     entire frame is used rather than the \abbr{VGG} feature vector of the
     cropped-out projection screen.
 
+\mode
+<all>
+
   \item[Histograms]
     Given a cropped-out projection screen and a set of lecture slide
     pages, the lecture slide pages are ranked by a similarity or distance
     measure between a histogram of the cropped-out projection screen and a
     histogram of a lecture slide page in descending or ascending order,
     respectively.
+
+\mode
+<article>
 
     The model is defined in the
     \texttt{models.task1.subtaska.histograms} module. It is parametrized by
@@ -769,12 +1248,27 @@ used to solve task 1. I will now describe the models for solving task 1a:
     used to compare two histograms, and by the parameter $\bm\theta$ that
     specifies the preprocessing.
 
+\mode
+<presentation>
+
+\end{description}
+\end{frame}
+\begin{frame}
+\frametitle<presentation>{Task 1a models III}
+\begin{description}
+
+\mode
+<all>
+
   \item[First-tier classifiers]
     Given a cropped-out projection screen and a set of lecture slide
     pages, the lecture slide pages are ranked in an ascending order by the
     signed distance from a decision hyperplane or by the posterior probability
     estimate of a classifier, where the observation is the pairwise feature
     vector between the projection screen and a lecture slide page.
+
+\mode
+<article>
 
     The model is defined in the \texttt{models.task1.subtaska.classifiers}
     module. It is parametrized by the classifier that is used (logistic
@@ -821,28 +1315,56 @@ used to solve task 1. I will now describe the models for solving task 1a:
     No grid search is performed with the non-parametric logistic regression
     classifier. The classifier with the optimal parameters is then trained on
     the training observations.
+
+\mode
+<all>
+
 \end{description}
+\end{frame}
+
+\mode
+<article>
+
 There exist 3 dummy models, 80 possible values of the parameter for row numbers,
 4 possible values of the parameters for \abbr{VGG}, 1452 possible values of the
 parameters for histograms, and 8 possible values of the parameters for
 first-tier classifiers. This amounts to 1547 parametrized task 1a models in
 total.
 
+\mode
+<all>
+
+\begin{frame}
+\frametitle<presentation>{Task 1b models}
 I will now describe the models for solving task 1b:
-\begin{description}
+
+\begin{description}[<+->]
   \item[Dummy models]
     Given a cropped-out projection screen and a set of lecture slide pages, a
     random boolean variable (random), the value of true (conservative), or
     whether the projection screen matches (best) or does not match (worst) any
-    lecture slide page in the set, is returned. Dummy models are a baseline.
+    lecture slide page in the set, is returned.
+
+\mode
+<article>
+
+    The models are defined in the
+    \texttt{models.task1.subtaskb.dummy} module.
+
+\mode
+<all>
 
   \item[Second-tier classifiers]
     Given an input that consists of a cropped-out projection screen and
     a set of lecture slide pages, a \term{random vector of scores} is produced
-    by passing the input to task 1a models. Based on this random vector, a
-    classifier decides whether the projection screen matches any lecture slide
-    page in the set.
-    
+    by passing the input to task 1a models and taking the score of the
+    highest-ranking lecture slide. Based on this random vector, a classifier
+    decides whether the projection screen matches any lecture slide page in the
+    set.
+
+\mode
+<article>
+
     The model is defined in the \texttt{models.task1.subtaskb.classifiers}
     module. It is parametrized by the classifier that is used (logistic
     regression, \abbr{SVM}, real AdaBoost~\cite{friedman2000additive}, or a
@@ -861,13 +1383,24 @@ I will now describe the models for solving task 1b:
     whether \abbr{VGG} is included in the task 1a models. Since the number of
     features is small, no feature preselection is performed. The rest of the
     training is identical to the first-tier classifiers.
+
+\mode
+<all>
+
 \end{description}
+\end{frame}
+
+\mode
+<article>
+
 There exist 3 dummy models, and 8 possible values of the parameter for
 second-tier classifiers. This amounts to 11 parametrized task 1b models in
 total.
 
+\mode
+<all>{%
 \section{Experimental setup}
-\label{sec:experimental-setup}
+\label{sec:experimental-setup}}
 In this section, I will describe the procedure and the measures that were used
 to evaluate the baseline system described in Section~\ref{sec:system-description}.
 The evaluation is implemented in the \texttt{evaluation} module.
@@ -889,8 +1422,8 @@ folds. Due to time constraints, only a single step of the outer
 cross-validation was performed, i.e. only wide confidence intervals
 are given for the performance estimates.
 
-At each step of the inner cross-validation, a validated task 1 model is passed
-all cropped-out projection screens associated with the 15 validation
+At each step of the inner cross-validation, a validated task 1 model is
+presented all cropped-out projection screens associated with the 15 validation
 recordings. Each projection screen is accompanied with all lecture slide pages
 from the same validation recording. Among other things, this means that a task
 1b model is never validated on a cropped-out projection screen and a set of
@@ -898,184 +1431,139 @@ lecture slide pages, each associated with a different recording; only the
 ability of to detect cropped-out screens with no matching lecture slide pages
 is tested.
 
+\mode
+<all>
+
+\begin{frame}
+\frametitle<presentation>{Experimental setup}
+
+\mode
+<presentation>
+
+The dataset consists of 17 recordings. I use two nested cross-validations; the
+inner 16-fold cross-validation performs the model selection, whereas the
+outer 17-fold cross-validation estimates the performance.\pause
+
+\mode
+<all>
+
 For a task 1a model, I compute the empirical expected value of the highest rank
 of a matching page. I also compute an empirical 95\% two-sided confidence
-interval (\abbr{CI}) by taking the sample quantiles of the observed ranks. For
-a task 1b model, I compute the empirical expected value of the
+interval (\abbr{CI}) by taking the sample quantiles of the observed ranks.\pause
+  
+For a task 1b model, I compute the empirical expected value of the
 misclassification loss. I also estimate the 95\% two-sided confidence interval,
-this time by making a normality assumption about the binomial misclassification
-loss.
+this time by making a normality assumption about the binomial number of
+misclassifications.
+\end{frame}
 
+\mode
+<article>
+
+
+\mode
+<all>{%
 \section{Results}
-\label{sec:results}
+\label{sec:results}}
 
+\mode
+<all>
+
+\begin{frame}[fragile]
+\frametitle<presentation>{Task 1a model selection}
 \begin{table}
-\leavevmode\kern-.13\textwidth
-\begin{tabular}{l>{\footnotesize}ll}
-  Task 1a model & \normalsize Parameters & Highest rank (95\% \abbr{CI}) \\ \toprule
-
-  \textit{Dummy (best)}
-    &
-    & $\phantom{0}0.00$ ($0.00$--$0.00$) \\
-
-  Histograms
-    & foreground row altitudes, Jaccard index, $\theta_1=\text{False},\theta_2=3,\theta_3=(\text{False}, \text{False})$
-    & $\phantom{0}7.81$ ($0.00$--$43.00$) \\
-
-  \abbr{VGG}
-    & ImageNet and Places2, not handicapped
-    & $11.55$ ($0.00$--$57.53$) \\
-
-  Row numbers
-    & $\theta_1=\text{False},\theta_2=9,\theta_3=(\text{False}, \text{False})$
-    & $11.83$ ($0.00$--$65.00$) \\
-
-  First-tier classifiers
-    & random decision forest, without \abbr{VGG} feature vectors
-    & $17.13$ ($0.00$--$75.00$) \\
-
-  \textit{Dummy (random)}
-    &
-    & $28.15$ ($1.00$--$88.05$) \\
-
-  \textit{Dummy (worst)}
-    &
-    & $57.03$ ($24.00$--$110.00$) \\
-\end{tabular}
+\ifarticle
+  \leavevmode\kern-.13\textwidth
+\fi
+\input tables/model-selection-task1a
 \caption{Inner cross-validation (model selection) results for task 1a. Due to
   the high number of task 1a parametrized models (1547), only the
   highest-ranking parameter values are shown for each model.}
 \label{tab:model-selection-task1a}
 \end{table}
+\end{frame}
 
+\begin{frame}[fragile]
+\frametitle<presentation>{Task 1a performance estimation}
 \begin{table}
-\leavevmode\kern-.13\textwidth
-\begin{tabular}{l@{\hspace*{2.1em}}>{\footnotesize}ll}
-  Task 1a model & \normalsize Parameters & Highest rank (95\% \abbr{CI}) \\ \toprule
-
-  \textit{Dummy (best)}
-    &
-    & \\
-
-  Histograms
-    & foreground row altitudes, Jaccard index, $\theta_1=\text{False},\theta_2=3,\theta_3=(\text{False}, \text{False})$
-    & $\phantom{0}8.62$ ($0.00$--$37.10$) \\
-
-  \textit{Dummy (random)}
-    &
-    & \\
-
-  \textit{Dummy (worst)}
-    &
-    & \\
-\end{tabular}
+\ifarticle
+  \leavevmode\kern-.13\textwidth
+\fi
+\input tables/performance-estimation-task1a
 \caption{Outer cross-validation (performance estimation) results for task 1a.}
 \label{tab:performance-estimation-task1a}
 \end{table}
+\end{frame}
 
+\begin{frame}[fragile]
+\frametitle<presentation>{Task 1b model selection}
 \begin{table}
-\leavevmode\kern-.075\textwidth
-\begin{tabular}{l>{\footnotesize}ll}
-  Task 1b model & \normalsize Parameters & Misclassification loss (95\% \abbr{CI}) \\ \toprule
-
-  \textit{Dummy (best)}
-    &
-    & $0.0000$ ($0.0000$--$0.0000$) \\
-
-  \textit{Dummy (conservative)}
-    &
-    & $0.1469$ ($0.1193$--$0.1745$) \\
-
-  Second-tier classifiers
-    & logistic regression, without \abbr{VGG} feature vectors
-    & $0.3649$ ($0.3274$--$0.4024$) \\
-
-  \textit{Dummy (random)}
-    &
-    & $0.5008$ ($0.4618$--$0.5397$) \\
-
-  Second-tier classifiers
-    & logistic regression, with \abbr{VGG} feature vectors
-    & $0.5071$ ($0.4682$--$0.5461$) \\
-
-  Second-tier classifiers
-    & real AdaBoost, with \abbr{VGG} feature vectors
-    & $0.6288$ ($0.5911$--$0.6664$) \\
-
-  Second-tier classifiers
-    & real AdaBoost, without \abbr{VGG} feature vectors
-    & $0.6840$ ($0.6478$--$0.7203$) \\
-
-  Second-tier classifiers
-    & random decision forest, without \abbr{VGG} feature vectors
-    & $0.7283$ ($0.6936$--$0.7629$) \\
-
-  Second-tier classifiers
-    & \abbr{SVM}, without \abbr{VGG} feature vectors
-    & $0.8073$ ($0.7765$--$0.8380$) \\
-
-  Second-tier classifiers
-    & \abbr{SVM}, with \abbr{VGG} feature vectors
-    & $0.8183$ ($0.7883$--$0.8484$) \\
-
-  Second-tier classifiers
-    & random decision forest, with \abbr{VGG} feature vectors
-    & $0.8515$ ($0.8238$--$0.8792$) \\
-
-  \textit{Dummy (worst)}
-    &
-    & $1.0000$ ($1.0000$--$1.0000$) \\
-\end{tabular}
+\ifarticle
+  \leavevmode\kern-.075\textwidth
+\fi
+\input tables/model-selection-task1b
 \caption{Inner cross-validation (model selection) results for task 1b. Results
   for all 11 parametrized task 1b models are shown.}
 \label{tab:model-selection-task1b}
 \end{table}
+\end{frame}
 
+\begin{frame}[fragile]
+\frametitle<presentation>{Task 1b performance estimation}
 \begin{table}
-\leavevmode\kern-.075\textwidth
-\begin{tabular}{l>{\footnotesize}l@{\hspace*{2.95em}}l}
-  Task 1b model & \normalsize Parameters & Misclassification loss (95\% \abbr{CI}) \\ \toprule
-
-  \textit{Dummy (best)}
-    &
-    & \\
-
-  \textit{Dummy (conservative)}
-    &
-    & \\
-
-  Second-tier classifiers
-    & logistic regression, without \abbr{VGG} feature vectors
-    & \\
-
-  \textit{Dummy (random)}
-    &
-    & \\
-
-  \textit{Dummy (worst)}
-    &
-    & \\
-\end{tabular}
+\ifarticle
+  \leavevmode\kern-.075\textwidth
+\fi
+\input tables/performance-estimation-task1b
 \caption{Outer cross-validation (performance estimation) results for task 1b.}
 \label{tab:performance-estimation-task1b}
 \end{table}
+\end{frame}
+
+\mode
+<article>
+
+Results of the evaluation for the task 1a models are given in tables
+\ref{tab:model-selection-task1a} and \ref{tab:performance-estimation-task1a}.
+In both the model selection and the performance estimation, the empirical
+confidence intervals are too wide for any statistically significant statements.
+At least according to the expected value of the evaluation measure ($8.62$),
+the system performs better than random (TODO).
+It is worth noting that the highest-ranking model uses neither relative
+luminance flipping ($\theta_1=\text{False}$) nor does it use any of the
+modified forms of the relative luminance histograms ($\theta_3=(\text{False},
+\text{False})$).
+
+Results of the evaluation for the task 1b models are given in tables
+\ref{tab:model-selection-task1b} and \ref{tab:performance-estimation-task1b}.
+Due to the normal approximation, the confidence intervals are much narrower. If
+we accept the normality assumption, then we can state at a 95\% confidence
+level that the system (TODO) performs better than random (TODO). However, since
+only 93 out of the 683 projection screens in the dataset have no matching
+lecture slide pages, the system does not perform better than conservative
+(TODO).
 
 \iffalse
-Model selection, task 1a
-- CIs are wide to the point of being useless,
-- according the the expected value, all models are better than random,
-- $\theta_1$ (flipping) and $\theta_3$ (relative luminance histogram weights) underperform
-- despite a lack of parameters, \abbr{VGG} yields high results
-- none of the models is provably better than random
-
-Model selection, task 1b
-- due to the normal approximation, CIs are much more narrow
-- at least one of the models is provably better than random
-- none of the models is provably better than conservative
+Model selection, task 1b:
+- only one model is better than random
 \fi
+
+\mode
+<all>
 
 \section{Conclusion}
 \label{sec:conclusion}
+\begin{frame}
+\frametitle<presentation>{Conclusion}
+In this work, I stated the problem of retrieving lecture slide pages based on
+lecture recordings and broke it down into four tasks. I then created and
+published an open dataset that is used for evaluating systems solving the
+tasks. I also created a system that solves task 1 with better than random
+results; this system can serve as a baseline for future systems.
+\end{frame}
+
+\mode
+<article>
 
 \section{Future work}
 \label{sec:future-work}
@@ -1103,7 +1591,8 @@ include
     \term{sequential combinations}~\cite[sec.~8.2.2]{soille2013morphological}.
 \end{itemize}
 Systems that do not aim to extract the foreground may benefit from not
-performing relative luminance flipping at all.
+performing relative luminance flipping at all, especially since the
+highest-ranking task 1a model does not actually use relative luminance flipping.
 
 Since all images are resized to the resolution of $512\times 512$ pixels, two
 straightforward image descriptors to consider in future systems are the
@@ -1117,7 +1606,9 @@ descriptors than these described in Section~\ref{sec:features} should also be
 considered~\cite{pass1999comparing}.
 
 The pairwise feature vector described in Section~\ref{sec:features} is an
-ad-hoc descriptor with no firm basis in prior literature.
+ad-hoc descriptor with no firm basis in prior literature. Since first-tier
+classifiers ranked below all other task 1a models in model selection, this
+might be a sign that a different pairwise descriptor is required.
 
 To detect the boundaries of lit projections screens for task 2, authors of
 future systems may wish to look in the following directions:
@@ -1259,10 +1750,17 @@ text below a block\footnote{a footnote with an \url{http://address.edu}}
 
 \fi
 
+\mode
+<all>
+
 \begin{frame}<presentation>[plain]
 \vfill
 \centerline{Thank you for your attention!}
 \vfill\vfill
 \end{frame}
 
+\begin{frame}[allowframebreaks]
+\frametitle<presentation>{Bibliography}
 \printbibliography
+\end{frame}
+\end{document}

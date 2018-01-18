@@ -1,0 +1,85 @@
+\ifarticle
+  \begin{tabular}{l>{\footnotesize}ll}
+\else
+  \begin{tabular}{ll}
+\fi
+
+Task 1b model
+\mode
+<article>{%
+  & \normalsize Parameters
+}
+  & Misclassification loss (95\% \abbr{CI}) \\ \toprule
+
+\textit{Dummy (best)}
+\mode
+<article>{%
+  &
+}
+  & $0.0000$ ($0.0000$--$0.0000$) \\
+
+\textit{Dummy (conservative)}
+\mode
+<article>{%
+  &
+}
+  & $0.1469$ ($0.1193$--$0.1745$) \\
+
+Second-tier classifiers
+\mode
+<article>{%
+  & logistic regression, without \abbr{VGG} feature vectors
+}
+  & $0.3649$ ($0.3274$--$0.4024$) \\
+
+\textit{Dummy (random)}
+\mode
+<article>{%
+  &
+}
+  & $0.5008$ ($0.4618$--$0.5397$) \\
+
+\ifarticle
+
+Second-tier classifiers
+  & logistic regression, with \abbr{VGG} feature vectors
+  & $0.5071$ ($0.4682$--$0.5461$) \\
+
+Second-tier classifiers
+  & real AdaBoost, with \abbr{VGG} feature vectors
+  & $0.6288$ ($0.5911$--$0.6664$) \\
+
+Second-tier classifiers
+  & real AdaBoost, without \abbr{VGG} feature vectors
+  & $0.6840$ ($0.6478$--$0.7203$) \\
+
+Second-tier classifiers
+  & random decision forest, without \abbr{VGG} feature vectors
+  & $0.7283$ ($0.6936$--$0.7629$) \\
+
+Second-tier classifiers
+  & \abbr{SVM}, without \abbr{VGG} feature vectors
+  & $0.8073$ ($0.7765$--$0.8380$) \\
+
+Second-tier classifiers
+  & \abbr{SVM}, with \abbr{VGG} feature vectors
+  & $0.8183$ ($0.7883$--$0.8484$) \\
+
+Second-tier classifiers
+  & random decision forest, with \abbr{VGG} feature vectors
+  & $0.8515$ ($0.8238$--$0.8792$) \\
+
+\else
+
+\multicolumn{2}{c}{$\vdots$} \\
+
+\fi
+
+\textit{Dummy (worst)}
+\mode
+<article>{%
+  &
+}
+  & $1.0000$ ($1.0000$--$1.0000$) \\
+
+\end{tabular}

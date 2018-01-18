@@ -1,0 +1,64 @@
+\ifarticle
+  \begin{tabular}{l>{\footnotesize}ll}
+\else
+  \begin{tabular}{ll}
+\fi
+
+Task 1a model
+\mode
+<article>{%
+  & \normalsize Parameters
+}
+  & Highest rank (95\% \abbr{CI}) \\ \toprule
+
+\textit{Dummy (best)}
+\mode
+<article>{%
+  &
+}
+  & $\phantom{0}0.00$ ($0.00$--$0.00$) \\
+
+Histograms
+\mode
+<article>{%
+  & foreground row altitudes, Jaccard index, $\theta_1=\text{False},\theta_2=3,\theta_3=(\text{False}, \text{False})$
+}
+  & $\phantom{0}7.81$ ($0.00$--$43.00$) \\
+
+\abbr{VGG}
+Histograms
+\mode
+<article>{%
+  & ImageNet and Places2, not handicapped
+}
+  & $11.55$ ($0.00$--$57.53$) \\
+
+Row numbers
+\mode
+<article>{%
+  & $\theta_1=\text{False},\theta_2=9,\theta_3=(\text{False}, \text{False})$
+}
+  & $11.83$ ($0.00$--$65.00$) \\
+
+First-tier classifiers
+\mode
+<article>{%
+  & random decision forest, without \abbr{VGG} feature vectors
+}
+  & $17.13$ ($0.00$--$75.00$) \\
+
+\textit{Dummy (random)}
+\mode
+<article>{%
+  &
+}
+  & $28.15$ ($1.00$--$88.05$) \\
+
+\textit{Dummy (worst)}
+\mode
+<article>{%
+  &
+}
+  & $57.03$ ($24.00$--$110.00$) \\
+
+\end{tabular}
